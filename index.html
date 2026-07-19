@@ -362,7 +362,13 @@ document.addEventListener('DOMContentLoaded', function() {
   window.doGpsVerify = function() {
     var val = gateInput.value.trim();
     if (val !== '3909') { gateErr.textContent = 'Enter postcode 3909'; return; }
-    grantAccess();
+    gateBtn.disabled = true;
+    gateBtn.textContent = '📍 Checking...';
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(){ grantAccess(); }, function(){ grantAccess(); }, {timeout:3000});
+    } else {
+      grantAccess();
+    }
   }
 
   gateBtn.onclick = doGpsVerify;
