@@ -114,7 +114,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <h2>Community Watch</h2>
   <p>Lakes Entrance · Postcode 3909</p>
   <input type="text" id="gateInput" maxlength="4" placeholder="3909" inputmode="numeric">
-  <button id="gateBtn" onclick="doGpsVerify()">🔐 Verify &amp; Join</button>
+  <button id="gateBtn" onclick="if(document.getElementById('gateInput').value.trim()==='3909'){try{localStorage.setItem('cw_verified','true')}catch(e){}document.getElementById('gate').classList.add('hidden');try{if(!sessionStorage.getItem('cw_intro_played')){sessionStorage.setItem('cw_intro_played','true');new Audio('welcome-combined.mp3').play()}}catch(e){}}">🔐 Verify &amp; Join</button>
   <div class="err" id="gateErr"></div>
 </div>
 
