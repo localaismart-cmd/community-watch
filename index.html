@@ -351,28 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   try { if (localStorage.getItem('cw_verified') === 'true') { gate.classList.add('hidden'); renderFeed(); } } catch(e) {}
 
-  window.grantAccess = window.grantAccess || function() {
-    try { localStorage.setItem('cw_verified', 'true'); } catch(e) {}
-    gate.classList.add('hidden');
-    playIntroSound();
-    renderFeed();
-  };
+  // Gate handled by inline onclick on button
 
-  // Simple postcode check — GPS optional
-  window.doGpsVerify = function() {
-    var val = gateInput.value.trim();
-    if (val !== '3909') { gateErr.textContent = 'Enter postcode 3909'; return; }
-    gateBtn.disabled = true;
-    gateBtn.textContent = '📍 Checking...';
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(){ grantAccess(); }, function(){ grantAccess(); }, {timeout:3000});
-    } else {
-      grantAccess();
-    }
-  }
-
-  gateBtn.onclick = doGpsVerify;
-  gateInput.onkeydown = function(e) { if (e.key === 'Enter') doGpsVerify(); };
+  // gate uses inline onclick
+  gateInput.onkeydown = function(e) { if (e.key === 'Enter') document.getElementById('gateBtn').click(); };
   setTimeout(function() { gateInput.focus(); }, 300);
 
   // Nav tabs
