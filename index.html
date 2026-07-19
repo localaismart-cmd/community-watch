@@ -358,60 +358,11 @@ document.addEventListener('DOMContentLoaded', function() {
     renderFeed();
   };
 
+  // Simple postcode check — GPS optional
   window.doGpsVerify = function() {
     var val = gateInput.value.trim();
     if (val !== '3909') { gateErr.textContent = 'Enter postcode 3909'; return; }
-
-    gateBtn.disabled = true;
-    gateBtn.textContent = '📍 Verifying location...';
-    gateErr.textContent = '';
-
-    if (!navigator.geolocation) {
-      gateBtn.disabled = false;
-      gateBtn.textContent = '🔐 Verify & Join';
-      gateErr.innerHTML = '📍 <strong>GPS is required</strong> to use Community Watch.<br>This device does not have GPS. Please use a phone or device with location services.';
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        var lat = pos.coords.latitude;
-        var lon = pos.coords.longitude;
-        var acc = pos.coords.accuracy;
-
-        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&addressdetails=1', {
-          headers: { 'User-Agent': 'CommunityWatch/1.0 (Lakes Entrance)' }
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          var gpsPostcode = data.address && data.address.postcode;
-          if (gpsPostcode === '3909') {
-            grantAccess();
-          } else {
-            // Mismatch — ask user to confirm
-            gateBtn.disabled = false;
-            gateBtn.textContent = '✅ Yes, I\'m in Lakes Entrance';
-            gateErr.innerHTML = '📍 You appear to be near <strong>' + (gpsPostcode || 'an unknown area') + '</strong> (accuracy ' + Math.round(acc) + 'm).<br>Is Lakes Entrance (3909) your home postcode?';
-            gateBtn.onclick = function() { grantAccess(); };
-          }
-        })
-        .catch(function() {
-          gateBtn.disabled = false;
-          gateBtn.textContent = '🔐 Try Again';
-          gateErr.innerHTML = '⚠️ Could not verify your location. Please <button style="background:transparent;border:none;color:#64B5F6;cursor:pointer;text-decoration:underline;font-family:inherit;font-size:0.85rem;" onclick="doGpsVerify()">try again</button> or check your internet connection.';
-        });
-      },
-      function(err) {
-        gateBtn.disabled = false;
-        gateBtn.textContent = '🔐 Try Again';
-        if (err.code === 1) {
-          gateErr.innerHTML = '📍 <strong>GPS access is required</strong> to verify you\'re in Lakes Entrance (3909).<br><br>This keeps our community safe. Please allow location when prompted, or check your browser settings.';
-        } else {
-          gateErr.innerHTML = '📍 GPS timed out. Make sure your location is turned on, then <button style="background:transparent;border:none;color:#64B5F6;cursor:pointer;text-decoration:underline;font-family:inherit;font-size:0.85rem;" onclick="doGpsVerify()">try again</button>.';
-        }
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
+    grantAccess();
   }
 
   gateBtn.onclick = doGpsVerify;
