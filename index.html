@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Share via API for other devices to pick up
     try {
-      fetch('/api', {
+      fetch('https://community-watch.netlify.app/api', {
         method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           action: 'upload',
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   setInterval(function() {
     try {
-      fetch('/api', {
+      fetch('https://community-watch.netlify.app/api', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action: 'poll', lastId: lastSeenId})
