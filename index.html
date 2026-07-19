@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Watch — Lakes Entrance</title>
+<meta name="description" content="Neighbourhood safety alerts for Lakes Entrance VIC 3909.">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a237e">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #e8eaed; }
+.container { max-width: 800px; margin: 0 auto; padding: 0 1rem; }
+
+/* Nav */
+.nav { display: flex; align-items: center; justify-content: space-between; background: rgba(13,17,23,0.97); padding: 0.6rem 1rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 0.5rem; flex-wrap: wrap; }
+.nav-brand { font-weight: 900; font-size: 1rem; white-space: nowrap; }
+.nav-btns { display: flex; gap: 0.2rem; }
+.nav-btns button { padding: 0.4rem 0.8rem; border: none; border-radius: 6px; background: transparent; color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+.nav-btns button:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.nav-btns button.active { color: #64B5F6; background: rgba(26,115,232,0.15); }
+.nav-btns button.danger { color: #e57373; }
+.nav-btns button.danger:hover { background: rgba(217,48,37,0.15); }
+
+/* Pages */
+.page { display: none; padding: 1rem 0; }
+.page.active { display: block; }
+.page h2 { margin-bottom: 0.3rem; font-size: 1.3rem; }
+.page .sub { color: #9aa0a6; font-size: 0.85rem; margin-bottom: 1rem; }
+
+/* Gate */
+.gate { position: fixed; inset: 0; z-index: 999; background: #0d1117; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; }
+.gate.hidden { display: none; }
+.gate h2 { margin-bottom: 0.5rem; }
+.gate p { color: #9aa0a6; font-size: 0.9rem; margin-bottom: 1.5rem; }
+.gate input { width: 200px; padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; font-size: 1.5rem; font-weight: 700; text-align: center; letter-spacing: 6px; font-family: monospace; margin-bottom: 1rem; }
+.gate button { width: 200px; padding: 1rem; border-radius: 12px; border: none; background: #1a73e8; color: #fff; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
+.gate .err { color: #fdd835; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5em; }
+
+/* Feed */
+.alert-card { background: #161b22; border-radius: 10px; padding: 0.8rem 1rem; margin-bottom: 0.6rem; border-left: 4px solid #1e8e3e; text-align: left; }
+.alert-card.emergency { border-left-color: #d93025; }
+.alert-card.amber { border-left-color: #f9a825; }
+.alert-card .tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem; }
+.alert-card.emergency .tag { color: #e57373; }
+.alert-card.amber .tag { color: #fdd835; }
+.alert-card.community .tag { color: #81c784; }
+.alert-card .title { font-weight: 700; font-size: 0.9rem; }
+.alert-card .desc { font-size: 0.8rem; color: #9aa0a6; }
+.alert-card .meta { font-size: 0.7rem; color: #5f6368; margin-top: 0.3rem; }
+.alert-card .act { margin-top: 0.4rem; }
+.alert-card .act button, .alert-card .act a { padding: 0.2rem 0.6rem; border-radius: 4px; border: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.06); color: #9aa0a6; font-family: inherit; margin-right: 0.3rem; text-decoration: none; }
+.alert-card .act .btn000 { background: rgba(217,48,37,0.2); color: #e57373; font-weight: 800; }
+
+/* Report Form */
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-bottom: 0.3rem; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.7rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #e8eaed; font-size: 0.9rem; font-family: inherit; }
+.form-group textarea { min-height: 70px; }
+.cat-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.cat-btns button { padding: 0.5rem 1rem; border-radius: 8px; border: 2px solid rgba(255,255,255,0.1); background: transparent; color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; }
+.cat-btns button.sel-em { border-color: #d93025; color: #e57373; background: rgba(217,48,37,0.1); }
+.cat-btns button.sel-am { border-color: #f9a825; color: #fdd835; background: rgba(249,168,37,0.1); }
+.cat-btns button.sel-co { border-color: #1e8e3e; color: #81c784; background: rgba(30,142,62,0.1); }
+
+.mic-wrap { position: relative; }
+.mic-wrap textarea { padding-right: 2.5rem; }
+.mic-wrap button { position: absolute; bottom: 6px; right: 6px; width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,0.08); color: #9aa0a6; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.mic-wrap button.active { background: rgba(217,48,37,0.2); color: #e57373; }
+.mic-status { font-size: 0.7rem; color: #9aa0a6; min-height: 1.2em; }
+
+.btn { padding: 0.7rem 1.5rem; border-radius: 8px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: inherit; background: #1a73e8; color: #fff; width: 100%; }
+.btn:hover { background: #1557b0; }
+.btn:disabled { opacity: 0.4; }
+
+/* About */
+.emergency-box { background: rgba(217,48,37,0.1); border: 1px solid rgba(217,48,37,0.3); border-radius: 12px; padding: 1rem; text-align: center; margin-bottom: 1rem; }
+.emergency-box h3 { color: #e57373; font-size: 1rem; }
+.emergency-box p { color: #9aa0a6; font-size: 0.8rem; margin: 0.3rem 0; }
+.btn000 { display: inline-block; padding: 0.8rem 2rem; border-radius: 10px; border: none; background: #d93025; color: #fff; font-size: 1.2rem; font-weight: 900; cursor: pointer; text-decoration: none; animation: pulse 2s infinite; margin-top: 0.5rem; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(217,48,37,0.4)} 50%{box-shadow:0 0 0 12px rgba(217,48,37,0)} }
+.rules { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
+.rule { background: #161b22; border-radius: 8px; padding: 0.8rem; border-left: 3px solid #d93025; font-size: 0.8rem; }
+.rule.ok { border-left-color: #1e8e3e; }
+.rule strong { display: block; }
+.rule span { color: #9aa0a6; font-size: 0.75rem; }
+
+/* Report */
+.alert-card .act .btn-report { background: rgba(255,152,0,0.15); color: #ffb74d; }
+.alert-card .act .btn-report.reported { opacity: 0.4; cursor: default; }
+.alert-card.reported { opacity: 0.4; border-left-color: #ffb74d; }
+.alert-card.reported .tag::after { content: ' 🚩 Reported'; font-size: 0.7rem; color: #ffb74d; }
+
+/* Footer */
+.footer { text-align: center; padding: 1rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.75rem; color: #5f6368; }
+.footer strong { color: #9aa0a6; }
+
+/* Terms page */
+.terms-box { background: #161b22; border-radius: 10px; padding: 1rem; margin-bottom: 0.8rem; font-size: 0.8rem; line-height: 1.5; }
+.terms-box h3 { color: #9aa0a6; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.terms-box p { color: #5f6368; margin-bottom: 0.5rem; }
+.terms-box ul { color: #5f6368; padding-left: 1.2rem; margin-bottom: 0.5rem; }
+.terms-box ul li { margin-bottom: 0.3rem; }
+.terms-warn { background: rgba(217,48,37,0.1); border: 1px solid rgba(217,48,37,0.2); border-radius: 8px; padding: 0.8rem; font-size: 0.75rem; color: #e57373; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div class="gate" id="gate">
+  <div style="font-size:3rem">🛡️</div>
+  <h2>Community Watch</h2>
+  <p>Lakes Entrance · Postcode 3909</p>
+  <input type="text" id="gateInput" maxlength="4" placeholder="3909" inputmode="numeric">
+  <button id="gateBtn">🔐 Verify &amp; Join</button>
+  <div class="err" id="gateErr"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-brand">🛡️ Community Watch</div>
+  <div class="nav-btns">
+    <button class="active" data-page="feed">📋 Feed</button>
+    <button data-page="report">🚨 Report</button>
+    <button data-page="about">ℹ️ About</button>
+    <button data-page="terms">📋 Terms</button>
+    <button class="danger" id="call000">🚑 000</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- FEED PAGE -->
+<div class="page active" id="page-feed">
+  <h2>📋 Neighbourhood Feed</h2>
+  <div class="sub">Lakes Entrance · Postcode 3909</div>
+  <div id="feed"></div>
+  <p style="text-align:center;color:#5f6368;font-size:0.7rem;margin-top:0.5rem;">Alerts expire after 24 hours</p>
+</div>
+
+<!-- REPORT PAGE -->
+<div class="page" id="page-report">
+  <h2>🚨 Report an Alert</h2>
+  <div class="sub">If anyone is in danger, call 000 first.</div>
+
+  <div class="form-group">
+    <label>Alert Type</label>
+    <div class="cat-btns" id="catBtns">
+      <button data-cat="emergency">🔴 Emergency</button>
+      <button data-cat="amber">🟡 Be Alert</button>
+      <button class="sel-co" data-cat="community">🔵 Community</button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Title</label>
+    <input type="text" id="alertTitle" placeholder="e.g. Suspicious vehicle on Myer St" maxlength="100">
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <div class="mic-wrap">
+      <textarea id="alertDesc" placeholder="Describe what you observed. Facts only."></textarea>
+      <button id="micBtn" title="Tap to speak">🎤</button>
+    </div>
+    <div class="mic-status" id="micStatus"></div>
+  </div>
+
+  <div class="form-group">
+    <label>Location</label>
+    <input type="text" id="alertLocation" placeholder="e.g. Corner of Esplanade & Myer St">
+  </div>
+
+  <button class="btn" id="submitBtn">📤 Submit Alert</button>
+  <div id="submitStatus" style="margin-top:0.5rem;font-size:0.85rem;min-height:1.5em;"></div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <h2>ℹ️ About</h2>
+  <div class="sub">Alert. Observe. Assist safely. Never confront.</div>
+
+  <div class="emergency-box">
+    <h3>🚨 In an emergency, call Triple Zero (000)</h3>
+    <p>Community Watch is a neighbourhood tool — not a replacement for emergency services.</p>
+    <a href="tel:000" class="btn000">🚑 CALL 000 NOW</a>
+  </div>
+
+  <p style="color:#9aa0a6;font-size:0.85rem;margin-bottom:0.5rem;">Community Watch helps neighbours communicate during safety incidents. Always observe from safety. Never confront.</p>
+
+  <p style="color:#9aa0a6;font-size:0.85rem;margin-bottom:0.5rem;"><strong>Alert Categories:</strong></p>
+  <div class="rules">
+    <div class="rule" style="border-left-color:#d93025"><strong>🔴 Emergency</strong><span>Call 000 first. Immediate threat.</span></div>
+    <div class="rule" style="border-left-color:#f9a825"><strong>🟡 Be Alert</strong><span>Suspicious activity. Report facts.</span></div>
+    <div class="rule" style="border-left-color:#1e8e3e"><strong>🔵 Community</strong><span>Lost pet, hazard, neighbourly help.</span></div>
+    <div class="rule ok"><strong>✅ Call 000 First</strong><span>For any emergency.</span></div>
+    <div class="rule ok"><strong>✅ Never Confront</strong><span>Observe from safety.</span></div>
+    <div class="rule ok"><strong>✅ Report Facts</strong><span>Not assumptions.</span></div>
+  </div>
+</div>
+
+<!-- TERMS PAGE -->
+<div class="page" id="page-terms">
+  <h2>📋 Terms &amp; Disclaimer</h2>
+  <div class="sub">User responsibilities &amp; legal information</div>
+
+  <div class="terms-box">
+    <h3>⚠️ Important Notice</h3>
+    <p>Community Watch is a neighbourhood communication tool. It is <strong>NOT</strong> a replacement for Triple Zero (000), police, fire, ambulance or other emergency services. If you are in immediate danger, call 000.</p>
+  </div>
+
+  <div class="terms-box">
+    <h3>🛡️ User Responsibilities</h3>
+    <ul>
+      <li>Report facts only — not rumours, assumptions, or accusations based on race, ethnicity, or appearance</li>
+      <li>Never confront, chase, or follow any person you observe. Always stay at a safe distance</li>
+      <li>Call 000 first for any emergency before posting on Community Watch</li>
+      <li>Do not share others' precise location without their consent</li>
+      <li>Treat all community members with respect</li>
+    </ul>
+  </div>
+
+  <div class="terms-box">
+    <h3>⚖️ Disclaimer of Liability</h3>
+    <p>Community Watch is provided as a free community service. The creator and contributors accept <strong>no responsibility</strong> for any harm, loss, damage, or legal consequences arising from the use of this application, including but not limited to:</p>
+    <ul>
+      <li>Reliance on alert information that may be inaccurate, delayed, or incomplete</li>
+      <li>Actions taken by users in response to alerts, including confronting individuals</li>
+      <li>Failure to call 000 in a genuine emergency</li>
+      <li>Misuse of the platform by third parties</li>
+      <li>Technical failures, data loss, or service interruptions</li>
+    </ul>
+  </div>
+
+  <div class="terms-box">
+    <h3>🔒 Privacy</h3>
+    <p>No personal information (email, phone number, or account) is collected. Location is requested only when you submit an alert or explicitly choose a location feature. Your data stays on your device and is not shared with any third party.</p>
+  </div>
+
+  <div class="terms-box">
+    <h3>🚩 Reporting &amp; Moderation</h3>
+    <p>If an alert is reported by 3 or more community members, it will be automatically hidden from the feed. This helps the community self-moderate and prevents the spread of false or harmful information. The creator of this app reserves the right to remove any content at their discretion.</p>
+  </div>
+
+  <div class="terms-warn">
+    📞 In an emergency, always call <strong>Triple Zero (000)</strong>.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Built by <strong>Bryce Horo</strong> — Local AI Smart Victoria 🦘
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ===== ALL FUNCTIONS DEFINED FIRST =====
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btns button[data-page]').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelector('.nav-btns button[data-page="' + name + '"]').classList.add('active');
+  if (name === 'feed') renderFeed();
+}
+
+function getAlerts() { try { return JSON.parse(localStorage.getItem('cw_alerts')) || []; } catch(e) { return []; } }
+function saveAlerts(a) { try { localStorage.setItem('cw_alerts', JSON.stringify(a)); } catch(e) {} }
+
+function renderFeed() {
+  var el = document.getElementById('feed');
+  var alerts = getAlerts();
+  var now = Date.now();
+  if (!alerts.length) {
+    el.innerHTML = '<div style="text-align:center;padding:2rem;color:#5f6368;"><div style="font-size:2rem">🛡️</div><p style="font-size:0.85rem">No alerts right now.</p></div>';
+    return;
+  }
+  el.innerHTML = alerts.map(function(a) {
+    var age = Math.floor((now - new Date(a.time).getTime()) / 60000);
+    var ts = age < 1 ? 'Just now' : age < 60 ? age + 'm ago' : Math.floor(age/60) + 'h ago';
+    var cls = a.status === 'resolved' ? '' : a.type;
+    var tag = a.status === 'resolved' ? '✅ Resolved' : ({emergency:'🔴 Emergency',amber:'🟡 Be Alert',community:'🔵 Community'})[a.type] || '🔵 Community';
+    var actions = '';
+    if (a.status === 'active') {
+      if (a.type === 'emergency') actions = '<div class="act"><a href="tel:000" class="btn000">🚑 Call 000</a><button onclick="resolveAlert(' + a.id + ')">✅ Resolve</button></div>';
+      else actions = '<div class="act"><button onclick="resolveAlert(' + a.id + ')">✅ Mark Resolved</button></div>';
+    }
+    // Hide if 3+ reports
+    if (a.reports >= 3) return '';
+    var reportedByMe = getReported()['a'+a.id];
+    var reportBtn = reportedByMe
+      ? '<button class="btn-report reported" disabled>🚩 Reported</button>'
+      : '<button class="btn-report" onclick="reportAlert(' + a.id + ')">🚩 Report</button>';
+    if (a.status === 'active') actions += reportBtn;
+    return '<div class="alert-card ' + cls + (a.reports > 0 && a.reports < 3 ? ' reported' : '') + '"><div class="tag">' + tag + (a.reports > 0 && a.reports < 3 ? ' 🚩' : '') + ' · ' + ts + '</div><div class="title">' + esc(a.title) + '</div>' + (a.desc ? '<div class="desc">' + esc(a.desc) + '</div>' : '') + '<div class="meta">📍 ' + esc(a.location) + ' · ' + new Date(a.time).toLocaleString('en-AU') + '</div>' + actions + '</div>';
+  }).join('');
+}
+
+function resolveAlert(id) {
+  var a = getAlerts();
+  for (var i = 0; i < a.length; i++) { if (a[i].id === id) { a[i].status = 'resolved'; break; } }
+  saveAlerts(a);
+  renderFeed();
+}
+
+function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ===== REPORT / FLAG SYSTEM =====
+function getReported() { try { return JSON.parse(localStorage.getItem('cw_reported')) || {}; } catch(e) { return {}; } }
+function saveReported(r) { try { localStorage.setItem('cw_reported', JSON.stringify(r)); } catch(e) {} }
+
+function reportAlert(id) {
+  var reported = getReported();
+  if (reported['a'+id]) return;
+  reported['a'+id] = true;
+  saveReported(reported);
+  var alerts = getAlerts();
+  for (var i = 0; i < alerts.length; i++) {
+    if (alerts[i].id === id) {
+      if (!alerts[i].reports) alerts[i].reports = 0;
+      alerts[i].reports++;
+      break;
+    }
+  }
+  saveAlerts(alerts);
+  renderFeed();
+}
+
+// ===== BIND FUNCTIONS ON DOM READY =====
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Intro sound helper (called on user gesture)
+  function playIntroSound() {
+    try {
+      if (sessionStorage.getItem('cw_intro_played')) return;
+      sessionStorage.setItem('cw_intro_played', 'true');
+      var combined = new Audio('welcome-combined.mp3');
+      combined.volume = 0.5;
+      combined.play().catch(function(e) { console.warn('CW audio failed:', e); });
+    } catch(e) { console.warn('CW audio error:', e); }
+  }
+
+  // Gate
+  var gate = document.getElementById('gate');
+  var gateInput = document.getElementById('gateInput');
+  var gateBtn = document.getElementById('gateBtn');
+  var gateErr = document.getElementById('gateErr');
+
+  try { if (localStorage.getItem('cw_verified') === 'true') { gate.classList.add('hidden'); renderFeed(); } } catch(e) {}
+
+  window.grantAccess = function() {
+    try { localStorage.setItem('cw_verified', 'true'); } catch(e) {}
+    gate.classList.add('hidden');
+    playIntroSound();
+    renderFeed();
+  };
+
+  window.doGpsVerify = function() {
+    var val = gateInput.value.trim();
+    if (val !== '3909') { gateErr.textContent = 'Enter postcode 3909'; return; }
+
+    gateBtn.disabled = true;
+    gateBtn.textContent = '📍 Verifying location...';
+    gateErr.textContent = '';
+
+    if (!navigator.geolocation) {
+      gateBtn.disabled = false;
+      gateBtn.textContent = '🔐 Verify & Join';
+      gateErr.innerHTML = '📍 <strong>GPS is required</strong> to use Community Watch.<br>This device does not have GPS. Please use a phone or device with location services.';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
+        var acc = pos.coords.accuracy;
+
+        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&addressdetails=1', {
+          headers: { 'User-Agent': 'CommunityWatch/1.0 (Lakes Entrance)' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var gpsPostcode = data.address && data.address.postcode;
+          if (gpsPostcode === '3909') {
+            grantAccess();
+          } else {
+            // Mismatch — ask user to confirm
+            gateBtn.disabled = false;
+            gateBtn.textContent = '✅ Yes, I\'m in Lakes Entrance';
+            gateErr.innerHTML = '📍 You appear to be near <strong>' + (gpsPostcode || 'an unknown area') + '</strong> (accuracy ' + Math.round(acc) + 'm).<br>Is Lakes Entrance (3909) your home postcode?';
+            gateBtn.onclick = function() { grantAccess(); };
+          }
+        })
+        .catch(function() {
+          gateBtn.disabled = false;
+          gateBtn.textContent = '🔐 Try Again';
+          gateErr.innerHTML = '⚠️ Could not verify your location. Please <button style="background:transparent;border:none;color:#64B5F6;cursor:pointer;text-decoration:underline;font-family:inherit;font-size:0.85rem;" onclick="doGpsVerify()">try again</button> or check your internet connection.';
+        });
+      },
+      function(err) {
+        gateBtn.disabled = false;
+        gateBtn.textContent = '🔐 Try Again';
+        if (err.code === 1) {
+          gateErr.innerHTML = '📍 <strong>GPS access is required</strong> to verify you\'re in Lakes Entrance (3909).<br><br>This keeps our community safe. Please allow location when prompted, or check your browser settings.';
+        } else {
+          gateErr.innerHTML = '📍 GPS timed out. Make sure your location is turned on, then <button style="background:transparent;border:none;color:#64B5F6;cursor:pointer;text-decoration:underline;font-family:inherit;font-size:0.85rem;" onclick="doGpsVerify()">try again</button>.';
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  gateBtn.onclick = doGpsVerify;
+  gateInput.onkeydown = function(e) { if (e.key === 'Enter') doGpsVerify(); };
+  setTimeout(function() { gateInput.focus(); }, 300);
+
+  // Nav tabs
+  document.querySelectorAll('.nav-btns button[data-page]').forEach(function(b) {
+    b.onclick = function() { showPage(this.dataset.page); };
+  });
+
+  // 000
+  document.getElementById('call000').onclick = function() {
+    if (confirm('🚑 Call Triple Zero (000)? Only if someone is in immediate danger.')) window.location.href = 'tel:000';
+  };
+
+  // Category buttons
+  var selectedCategory = 'community';
+  document.querySelectorAll('#catBtns button').forEach(function(b) {
+    b.onclick = function() {
+      document.querySelectorAll('#catBtns button').forEach(function(x) { x.className = ''; });
+      var cat = this.dataset.cat;
+      this.className = 'sel-' + (cat === 'emergency' ? 'em' : cat === 'amber' ? 'am' : 'co');
+      selectedCategory = cat;
+    };
+  });
+
+  // Submit alert
+  document.getElementById('submitBtn').onclick = function() {
+    var title = document.getElementById('alertTitle').value.trim();
+    var desc = document.getElementById('alertDesc').value.trim();
+    var loc = document.getElementById('alertLocation').value.trim();
+    var st = document.getElementById('submitStatus');
+
+    if (!title) { st.textContent = '⚠️ Please enter a title'; st.style.color = '#fdd835'; return; }
+
+    var alert = {
+      id: Date.now(),
+      type: selectedCategory,
+      title: title,
+      desc: desc,
+      location: loc || 'Lakes Entrance',
+      time: new Date().toISOString(),
+      status: 'active',
+      reports: 0
+    };
+
+    var all = getAlerts();
+    all.unshift(alert);
+    saveAlerts(all);
+
+    st.textContent = '✅ Alert submitted!';
+    st.style.color = '#81c784';
+    document.getElementById('alertTitle').value = '';
+    document.getElementById('alertDesc').value = '';
+    document.getElementById('alertLocation').value = '';
+    document.querySelectorAll('#catBtns button').forEach(function(b) { b.className = ''; });
+    document.querySelector('#catBtns button[data-cat="community"]').className = 'sel-co';
+    selectedCategory = 'community';
+
+    // Push notification — share via relay + show local
+    var lbl = {emergency:'🔴 EMERGENCY',amber:'🟡 Be Alert',community:'🔵 Community'};
+    var notifInfo = {title: lbl[alert.type] + ' — ' + alert.title, body: (alert.desc||'').substring(0,200), loc: alert.location, type: alert.type};
+    
+    // Show local notification
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try {
+        navigator.serviceWorker.ready.then(function(reg) {
+          reg.showNotification(notifInfo.title, {
+            body: notifInfo.body + ' — ' + notifInfo.loc,
+            icon: '/icon-192.png', badge: '/favicon.svg',
+            vibrate: alert.type === 'emergency' ? [500,150,500,150,500] : [200,100,200],
+            tag: 'cw-' + alert.id, requireInteraction: alert.type === 'emergency'
+          });
+        });
+      } catch(e) {}
+    }
+    
+    // Share via API for other devices to pick up
+    try {
+      fetch('/api', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          action: 'upload',
+          alerts: [{id: alert.id, type: alert.type, title: alert.title, desc: (alert.desc||'').substring(0,200), location: alert.location, time: alert.time}]
+        })
+      }).catch(function(){});
+    } catch(e) {}
+    
+    // Request permission if needed
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  };
+
+  // Mic / Speech-to-text
+  var micBtn = document.getElementById('micBtn');
+  var micStatus = document.getElementById('micStatus');
+  var sr = null;
+  try {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      sr = new SR();
+      sr.lang = 'en-AU';
+      sr.interimResults = false;
+      sr.onresult = function(e) {
+        var ta = document.getElementById('alertDesc');
+        var text = e.results[0][0].transcript;
+        ta.value = ta.value.trim() + (ta.value.trim() ? ' ' : '') + text;
+        micStatus.textContent = '✅ Done!';
+        micBtn.className = '';
+      };
+      sr.onend = function() { micBtn.className = ''; };
+    }
+  } catch(e) {}
+
+  micBtn.onclick = function() {
+    if (!sr) { micStatus.textContent = '❌ Not supported on this browser. Try Chrome.'; return; }
+    try {
+      sr.start();
+      micBtn.className = 'active';
+      micStatus.textContent = '🎤 Listening...';
+    } catch(e) { micStatus.textContent = '❌ Error: ' + e.message; }
+  };
+
+  // Sample alerts for first visit
+  try {
+    if (!localStorage.getItem('cw_init')) {
+      var samples = [
+        {id:1730000001,type:'community',title:'Fallen tree on walking path',desc:'Large branch down near the boat ramp.',location:'Near boat ramp',time:new Date(Date.now()-7200000).toISOString(),status:'active',reports:0},
+        {id:1730000002,type:'amber',title:'Suspicious vehicle — resolved',desc:'Police attended, vehicle moved on.',location:'Myer Street',time:new Date(Date.now()-14400000).toISOString(),status:'resolved',reports:0},
+        {id:1730000003,type:'emergency',title:'⚠️ SAMPLE: Emergency test — DO NOT CALL 000',desc:'Sample emergency alert for demo.',location:'Lakes Entrance',time:new Date(Date.now()-3600000).toISOString(),status:'active',reports:0}
+      ];
+      localStorage.setItem('cw_alerts', JSON.stringify(samples));
+      localStorage.setItem('cw_init', 'true');
+    }
+  } catch(e) {}
+
+  // Poll API for new alerts from other devices
+  var lastSeenId = 0;
+  try { lastSeenId = parseInt(localStorage.getItem('cw_last_seen') || '0'); } catch(e) {}
+  
+  setInterval(function() {
+    try {
+      fetch('/api', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action: 'poll', lastId: lastSeenId})
+      }).then(function(r) { return r.json(); }).then(function(data) {
+          if (data && data.alerts && data.alerts.length > 0) {
+            var localAlerts = [];
+            try { localAlerts = JSON.parse(localStorage.getItem('cw_alerts')) || []; } catch(e) {}
+            var changed = false;
+            
+            data.alerts.forEach(function(a) {
+              var already = localAlerts.some(function(x) { return x.id === a.id; });
+              if (!already) {
+                localAlerts.push(a);
+                changed = true;
+              }
+              
+              // Show notification for new alerts
+              if (a.id > lastSeenId && 'Notification' in window && Notification.permission === 'granted') {
+                var lbl = {emergency:'🔴 EMERGENCY',amber:'🟡 Be Alert',community:'🔵 Community'};
+                try {
+                  navigator.serviceWorker.ready.then(function(reg) {
+                    reg.showNotification(lbl[a.type] + ' — ' + a.title, {
+                      body: (a.desc||'') + ' — ' + a.location,
+                      icon: '/icon-192.png', badge: '/favicon.svg',
+                      vibrate: a.type === 'emergency' ? [500,150,500,150,500] : [200,100,200],
+                      tag: 'cw-' + a.id,
+                      requireInteraction: a.type === 'emergency'
+                    });
+                  });
+                } catch(e) {}
+              }
+            });
+            
+            if (changed) {
+              localAlerts.sort(function(a,b) { return b.id - a.id; });
+              try { localStorage.setItem('cw_alerts', JSON.stringify(localAlerts)); } catch(e) {}
+              renderFeed();
+            }
+            
+            lastSeenId = data.lastId || lastSeenId;
+            try { localStorage.setItem('cw_last_seen', String(lastSeenId)); } catch(e) {}
+          }
+
+    } catch(e) {}
+  }, 30000);
+  
+  // Push permission prompt
+  if ('Notification' in window && Notification.permission === 'default') {
+    setTimeout(function() {
+      Notification.requestPermission();
+    }, 5000);
+  }
+});
+
+// Service worker
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+</script>
+
+<!-- Multi-Language (isolated at bottom so it doesn't affect anything) -->
+<div id="google_translate_element" style="text-align:center;padding:0.5rem;margin-top:1rem;border-top:1px solid rgba(255,255,255,0.06);"></div>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,el,mi,sm,to,fj,ru,uk,hy,mt,iw,ar,tl,es,fr,de,it,pt,zh-CN,ja,ko,vi,th,hi,pa,gu,ne,si,km,my',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+</body>
+</html>
