@@ -493,9 +493,16 @@ function sa(a){try{localStorage.setItem('cw_alerts',JSON.stringify(a))}catch(e){
 // ===== FEED =====
 function renderFeed(){
   var el=document.getElementById('feed'),a=ga();
-  if(!a.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:rgba(255,255,255,0.2);font-size:0.9rem">🛡️ No alerts right now.</div>';return;}
-  el.innerHTML=a.map(function(x){
-    var age=Math.floor((Date.now()-new Date(x.time).getTime())/60000);
+  var now=Date.now();
+  var EXPIRY=24*60*60*1000; // 24 hours in milliseconds
+  // Remove expired alerts (older than 24 hours)
+  var fresh=a.filter(function(x){
+    try{return now-new Date(x.time).getTime()<EXPIRY;}catch(e){return true;}
+  });
+  if(fresh.length!==a.length)sa(fresh); // clean up expired from storage
+  if(!fresh.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:rgba(255,255,255,0.2);font-size:0.9rem">🛡️ No alerts right now.</div>';return;}
+  el.innerHTML=fresh.map(function(x){
+    var age=Math.floor((now-new Date(x.time).getTime())/60000);
     var ts=age<1?'Just now':age<60?age+'m ago':Math.floor(age/60)+'h ago';
     var lb={emergency:'🔴 Emergency',amber:'🟡 Be Alert',community:'🔵 Community'};
     return '<div class="card '+(x.type||'community')+'"><div class="tag">'+(lb[x.type]||'🔵 Community')+' · '+ts+'</div><div class="title">'+e(x.title)+'</div>'+(x.desc?'<div class="desc">'+e(x.desc)+'</div>':'')+'<div class="meta">📍 '+e(x.location||'Lakes Entrance')+'</div></div>';
