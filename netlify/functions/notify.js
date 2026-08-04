@@ -27,19 +27,26 @@ exports.handler = async (event) => {
     // SUBSCRIBE: Store push subscription in Supabase
     if (action === 'subscribe') {
       const sub = body.subscription;
-      if (!sub) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing subscription' }) };
+      if (!sub || !sub.endpoint) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing subscription' }) };
       
-      // Check if subscription already exists
-      const check = await fetch(SB_URL + '/rest/v1/subscriptions?endpoint=eq.' + encodeURIComponent(sub.endpoint), {
-        headers: { 'apiKey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-      }).then(r => r.json());
+      const insertBody = JSON.stringify({
+        endpoint: sub.endpoint,
+        p256dh: (sub.keys && sub.keys.p256dh) || '',
+        auth: (sub.keys && sub.keys.auth) || ''
+      });
 
-      if (!check || check.length === 0) {
-        await fetch(SB_URL + '/rest/v1/subscriptions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'apiKey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
-          body: JSON.stringify({ endpoint: sub.endpoint, keys: sub.keys, auth: sub.keys.auth, p256dh: sub.keys.p256dh })
-        });
+      const result = await fetch(SB_URL + '/rest/v1/subscriptions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apiKey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Prefer': 'return=minimal' },
+        body: insertBody
+      });
+
+      if (!result.ok) {
+        const errText = await result.text();
+        // If duplicate endpoint, that's fine
+        if (result.status !== 409 && result.status !== 400) {
+          return { statusCode: 500, headers, body: JSON.stringify({ error: 'Insert failed: ' + errText }) };
+        }
       }
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
     }
