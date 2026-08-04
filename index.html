@@ -418,11 +418,15 @@ textarea{min-height:65px;resize:vertical}
 
 // ===== NOTIFICATION PROMPT BANNER =====
 setTimeout(function(){
-  if('Notification'in window&&Notification.permission==='default'){
+  if('Notification'in window&&Notification.permission!=='granted'){
     var banner=document.createElement('div');
     banner.id='notifBanner';
-    banner.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#1a73e8;color:#fff;padding:0.8rem 1rem;text-align:center;font-size:0.85rem;font-family:\'Inter\',sans-serif;display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap';
-    banner.innerHTML='🔔 <strong>Enable notifications</strong> to get instant alerts from your neighbours <button onclick="enableNotifs()" style="background:#ffd700;color:#1a1a2e;border:none;border-radius:6px;padding:0.4rem 1rem;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.8rem">Enable</button> <button onclick="this.parentElement.remove()" style="background:transparent;color:rgba(255,255,255,0.6);border:none;cursor:pointer;font-size:0.8rem;font-family:inherit">✕</button>';
+    banner.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#1a73e8;color:#fff;padding:0.8rem 1rem;text-align:center;font-size:0.85rem;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap';
+    if(Notification.permission==='denied'){
+      banner.innerHTML='🔔 <strong>Notifications are blocked.</strong> Enable them in browser settings for instant alerts <button onclick="this.parentElement.remove()" style="background:transparent;color:rgba(255,255,255,0.6);border:none;cursor:pointer;font-size:0.8rem;font-family:inherit">✕</button>';
+    }else{
+      banner.innerHTML='🔔 <strong>Enable notifications</strong> to get instant alerts from your neighbours <button onclick="enableNotifs()" style="background:#ffd700;color:#1a1a2e;border:none;border-radius:6px;padding:0.4rem 1rem;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.8rem">Enable</button> <button onclick="this.parentElement.remove()" style="background:transparent;color:rgba(255,255,255,0.6);border:none;cursor:pointer;font-size:0.8rem;font-family:inherit">✕</button>';
+    }
     document.body.appendChild(banner);
   }
 },4000);
