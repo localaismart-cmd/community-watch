@@ -407,6 +407,17 @@ textarea{min-height:65px;resize:vertical}
 </div>
 
 <script>
+// ===== SERVICE WORKER REGISTRATION =====
+if('serviceWorker'in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/sw.js').then(function(reg){
+      console.log('SW registered:',reg.scope);
+    }).catch(function(err){
+      console.log('SW registration failed:',err);
+    });
+  });
+}
+
 // ===== GATE =====
 (function(){
   var g=document.getElementById('gate'),gi=document.getElementById('gateInput'),gb=document.getElementById('gateBtn'),ge=document.getElementById('gateErr');
