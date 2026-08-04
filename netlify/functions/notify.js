@@ -77,12 +77,21 @@ exports.handler = async (event) => {
       const invalid = [];
 
       for (const s of subs || []) {
-        const sub = { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } };
-        try {
-          await webpush.sendNotification(sub, payload);
-          sent++;
-        } catch (err) {
-          if (err.statusCode === 410 || err.statusCode === 404) invalid.push(s.endpoint);
+        let sub = null;
+        // Prefer the full JSON if available
+        if (s.sub_json) {
+          try { sub = JSON.parse(s.sub_json); } catch(e) { sub = null; }
+        }
+        if (!sub && s.p256dh && s.auth) {
+          sub = { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } };
+        }
+        if (sub) {
+          try {
+            await webpush.sendNotification(sub, payload);
+            sent++;
+          } catch (err) {
+            if (err.statusCode === 410 || err.statusCode === 404) invalid.push(s.endpoint);
+          }
         }
       }
 

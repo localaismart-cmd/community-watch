@@ -483,10 +483,11 @@ window.enableNotifs=function(){
             try{alert('SUB FULL: '+(sub?JSON.stringify(sub):'NO SUB'))}catch(e){}
             var p256=(sub.keys&&sub.keys.p256dh)||'';
             var auth=(sub.keys&&sub.keys.auth)||'';
+            var fullSub=JSON.stringify(sub);
             return fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/subscriptions',{
               method:'POST',
               headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},
-              body:JSON.stringify({endpoint:sub.endpoint,p256dh:p256,auth:auth})
+              body:JSON.stringify({endpoint:sub.endpoint,p256dh:p256,auth:auth,sub_json:fullSub})
             });
           }).then(function(res){
             var st=(res&&res.status)?('HTTP '+res.status+' '+res.statusText):'OK (resolved)';
