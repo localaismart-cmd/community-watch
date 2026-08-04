@@ -54,7 +54,14 @@ body.light .nav-btn.active{color:#1a73e8;background:rgba(26,115,232,0.08)}
 body.light .box{background:#fff;border-color:#e8e8e8}
 body.light .card{background:#fff;border-color:#e8e8e8}
 body.light .hero-card{background:#fff;border-color:#e8e8e8}
-body.light .tagline{color:#888}
+body.light .hero-card h2{color:#1a1a2e}
+body.light .hero-card .tagline{color:#666}
+body.light .hero-card p{color:#666}
+body.light .box h3{color:#1a1a2e}
+body.light .box p{color:#444}
+body.light .about-item h4{color:#1a1a2e}
+body.light .about-item p{color:#666}
+body.light .cta-brand .logo-sub{color:#888}
 body.light h2{color:#1a1a2e}
 body.light .about-item{background:#fff;border-color:#e8e8e8}
 body.light .faq-item{background:#fff;border-color:#e8e8e8}
@@ -601,11 +608,24 @@ document.getElementById('submitBtn').onclick=function(){
   var t=document.getElementById('alertTitle').value.trim(),d=document.getElementById('alertDesc').value.trim(),l=document.getElementById('alertLocation').value.trim(),st=document.getElementById('submitStatus');
   if(!t){st.textContent='Please enter a title';st.style.color='#fdd835';return;}
   var cat=sc;var al={id:Date.now(),type:cat,title:t,desc:d,location:l||'Lakes Entrance',time:new Date().toISOString()};
-  // Handle photo
+  // Handle photo (compressed so it can sync to all devices)
   var fileInput=document.getElementById('alertPhoto');
   if(fileInput&&fileInput.files&&fileInput.files[0]){
     var reader=new FileReader();
-    reader.onload=function(ev){al.photo=ev.target.result;finishSubmit(al);};
+    reader.onload=function(ev){
+      var img=new Image();
+      img.onload=function(){
+        var canvas=document.createElement('canvas');
+        var maxW=600;
+        var scale=Math.min(1,maxW/img.width);
+        canvas.width=img.width*scale;canvas.height=img.height*scale;
+        var ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        al.photo=canvas.toDataURL('image/jpeg',0.6);
+        finishSubmit(al);
+      };
+      img.src=ev.target.result;
+    };
     reader.readAsDataURL(fileInput.files[0]);
   }else{
     finishSubmit(al);
