@@ -462,7 +462,16 @@ window.enableNotifs=function(){
           navigator.serviceWorker.ready.then(function(reg){
             try{alert('STEP 4: SW ready, subscribing...')}catch(e){}
             return reg.pushManager.getSubscription().then(function(existing){
-              if(existing){try{alert('STEP 5: Existing subscription found')}catch(e){}return existing;}
+              if(existing&&existing.keys&&existing.keys.p256dh){
+                try{alert('STEP 5: Valid existing subscription found')}catch(e){}
+                return existing;
+              }
+              if(existing){
+                try{alert('STEP 5: Old subscription found - recreating with keys')}catch(e){}
+                return existing.unsubscribe().then(function(){
+                  return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s')});
+                });
+              }
               return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s')});
             });
           }).then(function(sub){
