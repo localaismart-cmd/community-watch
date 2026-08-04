@@ -443,36 +443,23 @@ setTimeout(function(){
 },4000);
 
 window.enableNotifs=function(){
-  try{alert('STEP 1: Permission requested')}catch(e){}
   if('Notification'in window){
     Notification.requestPermission().then(function(p){
-      try{alert('STEP 2: Permission = '+p)}catch(e){}
       var b=document.getElementById('notifBanner');if(b)b.remove();
       if(p==='granted'){
-        try{alert('STEP 3: serviceWorker='+('serviceWorker'in navigator)+' PushManager='+('PushManager'in window))}catch(e){}
         if('serviceWorker'in navigator&&'PushManager'in window){
           function urlBase64ToUint8Array(base64String){
-            try{
-              var padding='='.repeat((4-base64String.length%4)%4);
-              var base64=(base64String+padding).replace(/\-/g,'+').replace(/_/g,'/');
-              var raw=window.atob(base64);
-              var output=new Uint8Array(raw.length);
-              for(var i=0;i<raw.length;i++)output[i]=raw.charCodeAt(i);
-              return output;
-            }catch(e){
-              try{alert('VAPID conversion error: '+e.message)}catch(ee){}
-              return null;
-            }
+            var padding='='.repeat((4-base64String.length%4)%4);
+            var base64=(base64String+padding).replace(/\-/g,'+').replace(/_/g,'/');
+            var raw=window.atob(base64);
+            var output=new Uint8Array(raw.length);
+            for(var i=0;i<raw.length;i++)output[i]=raw.charCodeAt(i);
+            return output;
           }
           navigator.serviceWorker.ready.then(function(reg){
-            try{alert('STEP 4: SW ready, subscribing...')}catch(e){}
             return reg.pushManager.getSubscription().then(function(existing){
-              if(existing&&existing.keys&&existing.keys.p256dh){
-                try{alert('STEP 5: Valid existing subscription found')}catch(e){}
-                return existing;
-              }
+              if(existing&&existing.keys&&existing.keys.p256dh)return existing;
               if(existing){
-                try{alert('STEP 5: Old subscription found - recreating with keys')}catch(e){}
                 return existing.unsubscribe().then(function(){
                   return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s')});
                 });
@@ -480,7 +467,6 @@ window.enableNotifs=function(){
               return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s')});
             });
           }).then(function(sub){
-            try{alert('SUB FULL: '+(sub?JSON.stringify(sub):'NO SUB'))}catch(e){}
             var p256=(sub.keys&&sub.keys.p256dh)||'';
             var auth=(sub.keys&&sub.keys.auth)||'';
             var fullSub=JSON.stringify(sub);
@@ -489,13 +475,10 @@ window.enableNotifs=function(){
               headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},
               body:JSON.stringify({endpoint:sub.endpoint,p256dh:p256,auth:auth,sub_json:fullSub})
             });
-          }).then(function(res){
-            var st=(res&&res.status)?('HTTP '+res.status+' '+res.statusText):'OK (resolved)';
-            try{alert('STEP 7: Save result = '+st)}catch(e){}
+          }).then(function(){
             navigator.serviceWorker.ready.then(function(reg){reg.showNotification('✅ Notifications enabled!',{body:'You will now receive community alerts.',icon:'/icon-192.png',vibrate:[100,50,100]});});
           }).catch(function(err){
             console.log('Subscribe error:',err);
-            try{alert('❌ Push setup error at: '+err.message+'\n\nScreenshot this and send to the developer.')}catch(e){}
           });
         }
       }
