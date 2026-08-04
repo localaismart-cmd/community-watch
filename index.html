@@ -432,12 +432,14 @@ setTimeout(function(){
 },4000);
 
 window.enableNotifs=function(){
+  try{alert('STEP 1: Permission requested')}catch(e){}
   if('Notification'in window){
     Notification.requestPermission().then(function(p){
+      try{alert('STEP 2: Permission = '+p)}catch(e){}
       var b=document.getElementById('notifBanner');if(b)b.remove();
       if(p==='granted'){
+        try{alert('STEP 3: serviceWorker='+('serviceWorker'in navigator)+' PushManager='+('PushManager'in window))}catch(e){}
         if('serviceWorker'in navigator&&'PushManager'in window){
-          // Convert VAPID key (URL-safe base64 to Uint8Array)
           function urlBase64ToUint8Array(base64String){
             var padding='='.repeat((4-base64String.length%4)%4);
             var base64=(base64String+padding).replace(/\-/g,'+').replace(/_/g,'/');
@@ -447,22 +449,24 @@ window.enableNotifs=function(){
             return output;
           }
           navigator.serviceWorker.ready.then(function(reg){
+            try{alert('STEP 4: SW ready, subscribing...')}catch(e){}
             return reg.pushManager.getSubscription().then(function(existing){
-              if(existing)return existing;
+              if(existing){try{alert('STEP 5: Existing subscription found')}catch(e){}return existing;}
               return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s')});
             });
           }).then(function(sub){
-            // Store subscription DIRECTLY to Supabase (more reliable)
+            try{alert('STEP 6: Subscription created: '+sub.endpoint.substring(0,50))}catch(e){}
             return fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/subscriptions',{
               method:'POST',
               headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},
               body:JSON.stringify({endpoint:sub.endpoint,p256dh:sub.keys.p256dh,auth:sub.keys.auth})
             });
           }).then(function(){
+            try{alert('STEP 7: Saved to database! All done!')}catch(e){}
             navigator.serviceWorker.ready.then(function(reg){reg.showNotification('✅ Notifications enabled!',{body:'You will now receive community alerts.',icon:'/icon-192.png',vibrate:[100,50,100]});});
           }).catch(function(err){
             console.log('Subscribe error:',err);
-            try{alert('Push setup error: '+err.message+'\n\nScreenshot this and send to the developer.')}catch(e){}
+            try{alert('❌ Push setup error at: '+err.message+'\n\nScreenshot this and send to the developer.')}catch(e){}
           });
         }
       }
