@@ -452,8 +452,12 @@ window.enableNotifs=function(){
               return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s')});
             });
           }).then(function(sub){
-            // Store subscription via Netlify function
-            return fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'subscribe',subscription:sub})});
+            // Store subscription DIRECTLY to Supabase (more reliable)
+            return fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/subscriptions',{
+              method:'POST',
+              headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},
+              body:JSON.stringify({endpoint:sub.endpoint,p256dh:sub.keys.p256dh,auth:sub.keys.auth})
+            });
           }).then(function(){
             navigator.serviceWorker.ready.then(function(reg){reg.showNotification('✅ Notifications enabled!',{body:'You will now receive community alerts.',icon:'/icon-192.png',vibrate:[100,50,100]});});
           }).catch(function(err){
