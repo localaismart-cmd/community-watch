@@ -628,7 +628,7 @@ function finishSubmit(al){
   }
   // Share via relay for other devices
   // Save to Supabase (permanent, instant, unlimited users)
-  try{fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/alerts',{method:'POST',headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},body:JSON.stringify({id:al.id,type:cat,title:t,description:d,location:l||'Lakes Entrance',time:al.time})}).catch(function(){})}catch(e){}
+  try{fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/alerts',{method:'POST',headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},body:JSON.stringify({id:al.id,type:cat,title:t,description:d,location:l||'Lakes Entrance',time:al.time,photo:al.photo||null})}).catch(function(){})}catch(e){}
   if(Notification.permission==='default')Notification.requestPermission();
 };
 
@@ -663,7 +663,7 @@ setInterval(function(){
           local.forEach(function(x){if(x.id===a.id){found=true;if(a.resolved&&!x.resolved){x.resolved=true;changed=true;}}});
           if(!found){
             // Convert from Supabase format (description) to app format (desc)
-            var alert={id:a.id,type:a.type,title:a.title,desc:a.description,location:a.location,time:a.time,resolved:!!a.resolved};
+            var alert={id:a.id,type:a.type,title:a.title,desc:a.description,location:a.location,time:a.time,resolved:!!a.resolved,photo:a.photo||null};
             local.push(alert);changed=true;
             // Only notify if this is a genuinely new alert (not just synced)
             if(a.id>lastId&&'Notification'in window&&Notification.permission==='granted'){
