@@ -458,6 +458,7 @@ window.enableNotifs=function(){
             navigator.serviceWorker.ready.then(function(reg){reg.showNotification('✅ Notifications enabled!',{body:'You will now receive community alerts.',icon:'/icon-192.png',vibrate:[100,50,100]});});
           }).catch(function(err){
             console.log('Subscribe error:',err);
+            try{navigator.serviceWorker.ready.then(function(reg){reg.showNotification('⚠️ Setup issue',{body:'Error: '+err.message,icon:'/icon-192.png'})}).catch(function(){})}catch(e){}
           });
         }
       }
