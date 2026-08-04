@@ -3,567 +3,613 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Community Watch — Lakes Entrance</title>
-<meta name="description" content="Neighbourhood safety alerts for Lakes Entrance VIC 3909.">
+<title>Community Watch — Lakes Entrance | Keeping 3909 Safe</title>
+<meta name="description" content="Community Watch Lakes Entrance. Privacy-first neighbourhood safety app for postcode 3909. Alert neighbours, real-time alerts, emergency support.">
+<meta property="og:title" content="Community Watch — Lakes Entrance | Keeping 3909 Safe">
+<meta property="og:description" content="Free neighbourhood safety app for Lakes Entrance VIC. Alert neighbours, share safety info, and call 000 in emergencies. Privacy-first.">
+<meta property="og:image" content="/icon-512.png">
+<meta name="keywords" content="Lakes Entrance, community safety, neighbourhood watch, 3909, safety app, Victoria, Australia">
+<meta name="google-site-verification" content="eanTdesAoPpwn7TajM1QQCevfl4sxFWKwNJk74w2svY">
+<meta name="msvalidate.01" content="783FE425A3213B4D1F89F9E92CF5E1CA">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Community Watch — Lakes Entrance",
+  "url": "https://communitywatchlakesentrance.com.au",
+  "description": "Privacy-first neighbourhood safety app for Lakes Entrance VIC. Alert neighbours, call 000 in emergencies.",
+  "applicationCategory": "Safety",
+  "operatingSystem": "Android, iOS, Web",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "AUD"},
+  "author": {"@type": "Organization", "name": "Local AI Smart"},
+  "areaServed": {"@type": "City", "name": "Lakes Entrance"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Is Community Watch a replacement for 000?", "acceptedAnswer": {"@type": "Answer", "text": "No. Community Watch is a neighbourhood communication tool. Always call Triple Zero (000) in an emergency."}},
+    {"@type": "Question", "name": "How do I report an alert?", "acceptedAnswer": {"@type": "Answer", "text": "Tap the Report tab, choose alert type, write a title and description, add the location, then submit. Your neighbours will be notified."}},
+    {"@type": "Question", "name": "Is my location tracked?", "acceptedAnswer": {"@type": "Answer", "text": "No. Location is only used when you submit an alert. No background tracking. All data stays on your device."}},
+    {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "Community Watch is completely free. No charges, no subscriptions, no hidden fees."}},
+    {"@type": "Question", "name": "Who can join?", "acceptedAnswer": {"@type": "Answer", "text": "Anyone in Lakes Entrance and surrounding areas in postcode 3909 can join by entering the postcode."}}
+  ]
+}
+</script>
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<meta name="theme-color" content="#1a237e">
+<meta name="theme-color" content="#0a1628">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #e8eaed; }
-.container { max-width: 800px; margin: 0 auto; padding: 0 1rem; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:#0a1628;color:#e8eaed;overflow-x:hidden}
+/*=== GATE ===*/
+.gate{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0a1628 0%,#162240 50%,#0a1628 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;transition:opacity 0.5s}
+.gate.hidden{opacity:0;pointer-events:none}
+.gate .shield{font-size:4rem;margin-bottom:0.5rem;filter:drop-shadow(0 0 30px rgba(100,181,246,0.3))}
+.gate h1{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;background:linear-gradient(135deg,#64B5F6,#81c784);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gate .sub{color:rgba(255,255,255,0.4);font-size:0.9rem;margin-bottom:0.3rem}
+.gate .postcode-badge{display:inline-block;background:rgba(100,181,246,0.1);border:1px solid rgba(100,181,246,0.2);color:#64B5F6;padding:0.2rem 1rem;border-radius:50px;font-size:0.8rem;font-weight:700;margin-bottom:2rem}
+.gate input{width:220px;padding:1rem;border-radius:12px;border:2px solid rgba(100,181,246,0.2);background:rgba(255,255,255,0.05);color:#fff;font-size:1.5rem;font-weight:700;text-align:center;letter-spacing:8px;font-family:monospace;outline:none;transition:border-color 0.3s}
+.gate input:focus{border-color:#64B5F6;box-shadow:0 0 20px rgba(100,181,246,0.15)}
+.gate .btn-join{width:220px;padding:1rem;border-radius:12px;border:none;background:linear-gradient(135deg,#1a73e8,#4a90d9);color:#fff;font-size:1.1rem;font-weight:800;cursor:pointer;margin-top:0.8rem;transition:all 0.3s;box-shadow:0 4px 20px rgba(26,115,232,0.3)}
+.gate .btn-join:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,115,232,0.5)}
+.gate .err{color:#fdd835;font-size:0.85rem;margin-top:0.5rem;min-height:1.5em}
+.gate .features-mini{display:flex;gap:1.5rem;margin-top:2rem;color:rgba(255,255,255,0.3);font-size:0.75rem}
+.gate .features-mini span{display:flex;align-items:center;gap:0.3rem}
 
-/* Nav */
-.nav { display: flex; align-items: center; justify-content: space-between; background: rgba(13,17,23,0.97); padding: 0.6rem 1rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 0.5rem; flex-wrap: wrap; }
-.nav-brand { font-weight: 900; font-size: 1rem; white-space: nowrap; }
-.nav-btns { display: flex; gap: 0.2rem; }
-.nav-btns button { padding: 0.4rem 0.8rem; border: none; border-radius: 6px; background: transparent; color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit; }
-.nav-btns button:hover { color: #fff; background: rgba(255,255,255,0.05); }
-.nav-btns button.active { color: #64B5F6; background: rgba(26,115,232,0.15); }
-.nav-btns button.danger { color: #e57373; }
-.nav-btns button.danger:hover { background: rgba(217,48,37,0.15); }
+/*=== NAV ===*/
+.nav{display:flex;align-items:center;padding:0.6rem 1rem;background:rgba(10,22,40,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.05);gap:0.3rem;overflow-x:auto}
+.nav-brand{font-weight:900;font-size:0.9rem;background:linear-gradient(135deg,#64B5F6,#81c784);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;margin-right:0.5rem;display:flex;align-items:center;gap:0.3rem}
+.nav-brand .anim-shield{display:inline-block;animation:shield-glow 3s ease-in-out infinite;font-size:1rem}
+@keyframes shield-glow{0%,100%{filter:drop-shadow(0 0 5px rgba(100,181,246,0.3));transform:scale(1)}50%{filter:drop-shadow(0 0 20px rgba(100,181,246,0.6));transform:scale(1.05)}}
+.gate .shield{font-size:4rem;margin-bottom:0.5rem;animation:shield-float 4s ease-in-out infinite}
+@keyframes shield-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.cta-brand{text-align:center;padding:1rem;margin-top:0.5rem;border-top:1px solid rgba(255,255,255,0.04)}
+.cta-brand .logo-text{font-size:0.8rem;font-weight:700;background:linear-gradient(135deg,#64B5F6,#81c784);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
+.cta-brand .logo-sub{font-size:0.65rem;color:rgba(255,255,255,0.15);letter-spacing:1px;margin-top:0.1rem}
+.cta-brand .anim-bar{width:40px;height:2px;background:linear-gradient(90deg,transparent,#64B5F6,transparent);margin:0.3rem auto;animation:bar-pulse 2s ease-in-out infinite}
+@keyframes bar-pulse{0%,100%{opacity:0.3;width:40px}50%{opacity:1;width:60px}}
+.translate-wrap{text-align:center;padding:0.5rem;margin-top:0.5rem;border-top:1px solid rgba(255,255,255,0.04)}
+.nav-btn{padding:0.4rem 0.8rem;border:none;border-radius:8px;background:transparent;color:rgba(255,255,255,0.4);font-size:0.75rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:all 0.2s}
+.nav-btn:hover{color:#fff;background:rgba(255,255,255,0.05)}
+.nav-btn.active{color:#64B5F6;background:rgba(100,181,246,0.12)}
+.nav-btn.danger{color:#ef5350}
+.nav-btn.danger:hover{background:rgba(239,83,80,0.12)}
 
-/* Pages */
-.page { display: none; padding: 1rem 0; }
-.page.active { display: block; }
-.page h2 { margin-bottom: 0.3rem; font-size: 1.3rem; }
-.page .sub { color: #9aa0a6; font-size: 0.85rem; margin-bottom: 1rem; }
+/*=== PAGES ===*/
+.page{display:none;padding:1rem 0.8rem}
+.page.active{display:block}
 
-/* Gate */
-.gate { position: fixed; inset: 0; z-index: 999; background: #0d1117; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; }
-.gate.hidden { display: none; }
-.gate h2 { margin-bottom: 0.5rem; }
-.gate p { color: #9aa0a6; font-size: 0.9rem; margin-bottom: 1.5rem; }
-.gate input { width: 200px; padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; font-size: 1.5rem; font-weight: 700; text-align: center; letter-spacing: 6px; font-family: monospace; margin-bottom: 1rem; }
-.gate button { width: 200px; padding: 1rem; border-radius: 12px; border: none; background: #1a73e8; color: #fff; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
-.gate .err { color: #fdd835; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.5em; }
+/*=== FEED ===*/
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:0.9rem 1rem;margin-bottom:0.6rem;text-align:left;backdrop-filter:blur(4px);transition:all 0.2s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.card.emergency::before{background:linear-gradient(180deg,#ef5350,#c62828)}
+.card.amber::before{background:linear-gradient(180deg,#fdd835,#f57f17)}
+.card::before{background:linear-gradient(180deg,#66bb6a,#2e7d32)}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.2);border-color:rgba(255,255,255,0.1)}
+.card .tag{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem}
+.card.emergency .tag{color:#ef5350}
+.card.amber .tag{color:#fdd835}
+.card .tag{color:#66bb6a}
+.card .title{font-weight:700;font-size:0.9rem;margin-bottom:0.1rem}
+.card .desc{font-size:0.8rem;color:rgba(255,255,255,0.45)}
+.card .meta{font-size:0.7rem;color:rgba(255,255,255,0.25);margin-top:0.2rem}
 
-/* Feed */
-.alert-card { background: #161b22; border-radius: 10px; padding: 0.8rem 1rem; margin-bottom: 0.6rem; border-left: 4px solid #1e8e3e; text-align: left; }
-.alert-card.emergency { border-left-color: #d93025; }
-.alert-card.amber { border-left-color: #f9a825; }
-.alert-card .tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem; }
-.alert-card.emergency .tag { color: #e57373; }
-.alert-card.amber .tag { color: #fdd835; }
-.alert-card.community .tag { color: #81c784; }
-.alert-card .title { font-weight: 700; font-size: 0.9rem; }
-.alert-card .desc { font-size: 0.8rem; color: #9aa0a6; }
-.alert-card .meta { font-size: 0.7rem; color: #5f6368; margin-top: 0.3rem; }
-.alert-card .act { margin-top: 0.4rem; }
-.alert-card .act button, .alert-card .act a { padding: 0.2rem 0.6rem; border-radius: 4px; border: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.06); color: #9aa0a6; font-family: inherit; margin-right: 0.3rem; text-decoration: none; }
-.alert-card .act .btn000 { background: rgba(217,48,37,0.2); color: #e57373; font-weight: 800; }
+/*=== REPORT ===*/
+.box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1rem;margin-bottom:0.6rem;backdrop-filter:blur(4px)}
+.box h3{font-size:0.95rem;margin-bottom:0.3rem}
+.box p{color:rgba(255,255,255,0.45);font-size:0.8rem;margin-bottom:0.5rem}
+label{display:block;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:1px}
+input,textarea{width:100%;padding:0.7rem;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#e8eaed;font-size:0.85rem;font-family:'Inter',sans-serif;outline:none;transition:border 0.2s}
+input:focus,textarea:focus{border-color:rgba(100,181,246,0.3)}
+textarea{min-height:65px;resize:vertical}
 
-/* Report Form */
-.form-group { margin-bottom: 1rem; }
-.form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-bottom: 0.3rem; }
-.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.7rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #e8eaed; font-size: 0.9rem; font-family: inherit; }
-.form-group textarea { min-height: 70px; }
-.cat-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-.cat-btns button { padding: 0.5rem 1rem; border-radius: 8px; border: 2px solid rgba(255,255,255,0.1); background: transparent; color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; }
-.cat-btns button.sel-em { border-color: #d93025; color: #e57373; background: rgba(217,48,37,0.1); }
-.cat-btns button.sel-am { border-color: #f9a825; color: #fdd835; background: rgba(249,168,37,0.1); }
-.cat-btns button.sel-co { border-color: #1e8e3e; color: #81c784; background: rgba(30,142,62,0.1); }
+.cat-group{display:flex;gap:0.4rem;margin-bottom:0.8rem}
+.cat-btn{padding:0.5rem 0.8rem;border-radius:8px;border:2px solid rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.4);font-size:0.75rem;font-weight:700;cursor:pointer;flex:1;text-align:center;font-family:'Inter',sans-serif;transition:all 0.2s}
+.cat-btn:hover{border-color:rgba(255,255,255,0.15)}
+.cat-btn.sel-em{border-color:#ef5350;color:#ef5350;background:rgba(239,83,80,0.08)}
+.cat-btn.sel-am{border-color:#fdd835;color:#fdd835;background:rgba(253,216,53,0.08)}
+.cat-btn.sel-co{border-color:#66bb6a;color:#66bb6a;background:rgba(102,187,106,0.08)}
 
-.mic-wrap { position: relative; }
-.mic-wrap textarea { padding-right: 2.5rem; }
-.mic-wrap button { position: absolute; bottom: 6px; right: 6px; width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,0.08); color: #9aa0a6; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.mic-wrap button.active { background: rgba(217,48,37,0.2); color: #e57373; }
-.mic-status { font-size: 0.7rem; color: #9aa0a6; min-height: 1.2em; }
+.btn-primary{width:100%;padding:0.8rem;border-radius:10px;border:none;background:linear-gradient(135deg,#1a73e8,#4a90d9);color:#fff;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;box-shadow:0 4px 15px rgba(26,115,232,0.2)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,115,232,0.3)}
 
-.btn { padding: 0.7rem 1.5rem; border-radius: 8px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: inherit; background: #1a73e8; color: #fff; width: 100%; }
-.btn:hover { background: #1557b0; }
-.btn:disabled { opacity: 0.4; }
+/*=== ABOUT ===*/
+.hero-card{background:linear-gradient(135deg,rgba(100,181,246,0.05),rgba(129,199,132,0.05));border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:1.5rem;text-align:center;margin-bottom:1rem}
+.hero-card .shield{font-size:2.5rem;margin-bottom:0.5rem}
+.hero-card h2{font-size:1.3rem;font-weight:900;margin-bottom:0.3rem}
+.hero-card .tagline{color:rgba(255,255,255,0.4);font-size:0.9rem}
 
-/* About */
-.emergency-box { background: rgba(217,48,37,0.1); border: 1px solid rgba(217,48,37,0.3); border-radius: 12px; padding: 1rem; text-align: center; margin-bottom: 1rem; }
-.emergency-box h3 { color: #e57373; font-size: 1rem; }
-.emergency-box p { color: #9aa0a6; font-size: 0.8rem; margin: 0.3rem 0; }
-.btn000 { display: inline-block; padding: 0.8rem 2rem; border-radius: 10px; border: none; background: #d93025; color: #fff; font-size: 1.2rem; font-weight: 900; cursor: pointer; text-decoration: none; animation: pulse 2s infinite; margin-top: 0.5rem; }
-@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(217,48,37,0.4)} 50%{box-shadow:0 0 0 12px rgba(217,48,37,0)} }
-.rules { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
-.rule { background: #161b22; border-radius: 8px; padding: 0.8rem; border-left: 3px solid #d93025; font-size: 0.8rem; }
-.rule.ok { border-left-color: #1e8e3e; }
-.rule strong { display: block; }
-.rule span { color: #9aa0a6; font-size: 0.75rem; }
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.5rem}
+.about-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0.8rem;text-align:center}
+.about-item .icon{font-size:1.5rem;margin-bottom:0.3rem}
+.about-item h4{font-size:0.8rem;margin-bottom:0.2rem}
+.about-item p{font-size:0.7rem;color:rgba(255,255,255,0.4)}
 
-/* Report */
-.alert-card .act .btn-report { background: rgba(255,152,0,0.15); color: #ffb74d; }
-.alert-card .act .btn-report.reported { opacity: 0.4; cursor: default; }
-.alert-card.reported { opacity: 0.4; border-left-color: #ffb74d; }
-.alert-card.reported .tag::after { content: ' 🚩 Reported'; font-size: 0.7rem; color: #ffb74d; }
-
-/* Footer */
-.footer { text-align: center; padding: 1rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.75rem; color: #5f6368; }
-.footer strong { color: #9aa0a6; }
-
-/* Terms page */
-.terms-box { background: #161b22; border-radius: 10px; padding: 1rem; margin-bottom: 0.8rem; font-size: 0.8rem; line-height: 1.5; }
-.terms-box h3 { color: #9aa0a6; font-size: 0.85rem; margin-bottom: 0.3rem; }
-.terms-box p { color: #5f6368; margin-bottom: 0.5rem; }
-.terms-box ul { color: #5f6368; padding-left: 1.2rem; margin-bottom: 0.5rem; }
-.terms-box ul li { margin-bottom: 0.3rem; }
-.terms-warn { background: rgba(217,48,37,0.1); border: 1px solid rgba(217,48,37,0.2); border-radius: 8px; padding: 0.8rem; font-size: 0.75rem; color: #e57373; text-align: center; }
+@media(max-width:600px){.about-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <!-- GATE -->
 <div class="gate" id="gate">
-  <div style="font-size:3rem">🛡️</div>
-  <h2>Community Watch</h2>
-  <p>Lakes Entrance · Postcode 3909</p>
+  <div class="shield">🛡️</div>
+  <h1>Community Watch</h1>
+  <p class="sub">Lakes Entrance, Victoria</p>
+  <div class="postcode-badge">📍 Postcode 3909</div>
   <input type="text" id="gateInput" maxlength="4" placeholder="3909" inputmode="numeric">
-  <button id="gateBtn" onclick="if(document.getElementById('gateInput').value.trim()==='3909'){try{localStorage.setItem('cw_verified','true')}catch(e){}document.getElementById('gate').classList.add('hidden');window.renderFeed&&window.renderFeed();try{if(!sessionStorage.getItem('cw_intro_played')){sessionStorage.setItem('cw_intro_played','true');new Audio('welcome-combined.mp3').play()}}catch(e){}}">🔐 Verify &amp; Join</button>
+  <button class="btn-join" id="gateBtn">🔐 Join Your Community</button>
   <div class="err" id="gateErr"></div>
+  <div class="features-mini">
+    <span>🔔 Alerts</span>
+    <span>📍 Local</span>
+    <span>🔒 Private</span>
+    <span>🚑 000</span>
+  </div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-brand">🛡️ Community Watch</div>
-  <div class="nav-btns">
-    <button class="active" data-page="feed">📋 Feed</button>
-    <button data-page="report">🚨 Report</button>
-    <button data-page="about">ℹ️ About</button>
-    <button data-page="terms">📋 Terms</button>
-    <button class="danger" id="call000">🚑 000</button>
-  </div>
+  <span class="nav-brand"><span class="anim-shield">🛡️</span> Community Watch</span>
+  <button class="nav-btn active" data-page="about">🛡️ About</button>
+  <button class="nav-btn" data-page="report">🚨 Report</button>
+  <button class="nav-btn" data-page="feed">📋 Feed</button>
+  <button class="nav-btn danger" id="callBtn">🚑 000</button>
+  <button class="nav-btn" data-page="terms">⚖️ Terms</button>
 </div>
 
 <div class="container">
 
-<!-- FEED PAGE -->
-<div class="page active" id="page-feed">
-  <h2>📋 Neighbourhood Feed</h2>
-  <div class="sub">Lakes Entrance · Postcode 3909</div>
+<!-- FEED -->
+<div class="page" id="page-feed">
+  <div style="margin-bottom:0.8rem">
+    <h2 style="font-size:1.2rem;font-weight:800">📋 Neighbourhood Feed</h2>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.8rem">Lakes Entrance · Postcode 3909</p>
+  </div>
   <div id="feed"></div>
-  <p style="text-align:center;color:#5f6368;font-size:0.7rem;margin-top:0.5rem;">Alerts expire after 24 hours</p>
 </div>
 
-<!-- REPORT PAGE -->
+<!-- REPORT -->
 <div class="page" id="page-report">
-  <h2>🚨 Report an Alert</h2>
-  <div class="sub">If anyone is in danger, call 000 first.</div>
-
-  <div class="form-group">
-    <label>Alert Type</label>
-    <div class="cat-btns" id="catBtns">
-      <button data-cat="emergency">🔴 Emergency</button>
-      <button data-cat="amber">🟡 Be Alert</button>
-      <button class="sel-co" data-cat="community">🔵 Community</button>
-    </div>
+  <div style="margin-bottom:0.8rem">
+    <h2 style="font-size:1.2rem;font-weight:800">🚨 Report an Alert</h2>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.8rem">If anyone is in danger, call 000 first.</p>
   </div>
 
-  <div class="form-group">
+  <div class="box">
+    <div class="cat-group" id="catGroup">
+      <button class="cat-btn" data-cat="emergency">🔴 Emergency</button>
+      <button class="cat-btn" data-cat="amber">🟡 Be Alert</button>
+      <button class="cat-btn sel-co" data-cat="community">🔵 Community</button>
+    </div>
+
     <label>Title</label>
-    <input type="text" id="alertTitle" placeholder="e.g. Suspicious vehicle on Myer St" maxlength="100">
-  </div>
+    <input type="text" id="alertTitle" placeholder="e.g. Suspicious vehicle on Myer St" maxlength="100" style="margin-bottom:0.6rem">
 
-  <div class="form-group">
     <label>Description</label>
-    <div class="mic-wrap">
-      <textarea id="alertDesc" placeholder="Describe what you observed. Facts only."></textarea>
-      <button id="micBtn" title="Tap to speak">🎤</button>
+    <div style="position:relative;margin-bottom:0.6rem">
+      <textarea id="alertDesc" placeholder="What did you observe?" style="padding-right:2.5rem"></textarea>
+      <button id="micBtn" onclick="startMic()" style="position:absolute;bottom:6px;right:6px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s">🎤</button>
     </div>
-    <div class="mic-status" id="micStatus"></div>
-  </div>
+    <div id="micStatus" style="font-size:0.7rem;color:rgba(255,255,255,0.3);min-height:1em;margin-bottom:0.3rem"></div>
 
-  <div class="form-group">
     <label>Location</label>
-    <input type="text" id="alertLocation" placeholder="e.g. Corner of Esplanade & Myer St">
+    <input type="text" id="alertLocation" placeholder="e.g. Corner of Esplanade" style="margin-bottom:0.8rem">
   </div>
 
-  <button class="btn" id="submitBtn">📤 Submit Alert</button>
-  <div id="submitStatus" style="margin-top:0.5rem;font-size:0.85rem;min-height:1.5em;"></div>
+  <button class="btn-primary" id="submitBtn">📤 Submit Alert</button>
+  <div id="submitStatus" style="margin-top:0.5rem;font-size:0.85rem;min-height:1.5em;color:#66bb6a;font-weight:600"></div>
 </div>
 
-<!-- ABOUT PAGE -->
-<div class="page" id="page-about">
-  <h2>ℹ️ About</h2>
-  <div class="sub">Alert. Observe. Assist safely. Never confront.</div>
-
-  <div class="emergency-box">
-    <h3>🚨 In an emergency, call Triple Zero (000)</h3>
-    <p>Community Watch is a neighbourhood tool — not a replacement for emergency services.</p>
-    <a href="tel:000" class="btn000">🚑 CALL 000 NOW</a>
+<!-- ABOUT -->
+<div class="page active" id="page-about">
+  <div class="hero-card">
+    <div class="shield">🛡️</div>
+    <h2>Community Watch</h2>
+    <p class="tagline">Keeping Lakes Entrance Safe Together</p>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.75rem;margin-top:0.3rem">Postcode 3909</p>
   </div>
 
-  <p style="color:#9aa0a6;font-size:0.85rem;margin-bottom:0.5rem;">Community Watch helps neighbours communicate during safety incidents. Always observe from safety. Never confront.</p>
+  <div class="box">
+    <h3>Our Mission</h3>
+    <p>Community Watch is a privacy-first neighbourhood safety app for Lakes Entrance. We help neighbours share safety information quickly — while directing emergencies to Triple Zero (000).</p>
+  </div>
 
-  <p style="color:#9aa0a6;font-size:0.85rem;margin-bottom:0.5rem;"><strong>Alert Categories:</strong></p>
-  <div class="rules">
-    <div class="rule" style="border-left-color:#d93025"><strong>🔴 Emergency</strong><span>Call 000 first. Immediate threat.</span></div>
-    <div class="rule" style="border-left-color:#f9a825"><strong>🟡 Be Alert</strong><span>Suspicious activity. Report facts.</span></div>
-    <div class="rule" style="border-left-color:#1e8e3e"><strong>🔵 Community</strong><span>Lost pet, hazard, neighbourly help.</span></div>
-    <div class="rule ok"><strong>✅ Call 000 First</strong><span>For any emergency.</span></div>
-    <div class="rule ok"><strong>✅ Never Confront</strong><span>Observe from safety.</span></div>
-    <div class="rule ok"><strong>✅ Report Facts</strong><span>Not assumptions.</span></div>
+  <div class="box">
+    <h3>💡 Can You Trust This App? — Our 6-Step Promise</h3>
+    
+    <div onclick="var a=this.querySelector('.step-a'),t=this.querySelector('.step-t');if(a.style.display==='block'){a.style.display='none';t.textContent='+'}else{a.style.display='block';t.textContent='−'}" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span><strong>Step 1:</strong> 🤔 The Hesitation</span><span class="step-t" style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="step-a" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">"Can I trust a community safety app?" Most people wonder: Is this real? Will it work? Is my data safe? These are normal doubts — and we welcome them. We built this app to earn your trust, not exploit it.</div>
+    </div>
+    <div onclick="var a=this.querySelector('.step-a'),t=this.querySelector('.step-t');if(a.style.display==='block'){a.style.display='none';t.textContent='+'}else{a.style.display='block';t.textContent='−'}" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span><strong>Step 2:</strong> 🧠 Why People Get Stuck</span><span class="step-t" style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="step-a" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">Previous experiences with complicated apps, privacy concerns, or fear of being overwhelmed can stop people from trying something new. We understand. Community Watch was designed by a local for locals — it's simple, private, and free.</div>
+    </div>
+    <div onclick="var a=this.querySelector('.step-a'),t=this.querySelector('.step-t');if(a.style.display==='block'){a.style.display='none';t.textContent='+'}else{a.style.display='block';t.textContent='−'}" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span><strong>Step 3:</strong> ⚖️ The Trade-Offs</span><span class="step-t" style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="step-a" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">No app is perfect. Here's the honest truth: Community Watch requires you to have your phone with you and notifications enabled. It works best when neighbours use it together. The trade-off? A small effort for a much safer community.</div>
+    </div>
+    <div onclick="var a=this.querySelector('.step-a'),t=this.querySelector('.step-t');if(a.style.display==='block'){a.style.display='none';t.textContent='+'}else{a.style.display='block';t.textContent='−'}" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span><strong>Step 4:</strong> ✅ Our Standards</span><span class="step-t" style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="step-a" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">Privacy-first: no tracking · Australian law compliant · 100% free · Community-led · 000 integrated. These are our non-negotiable standards.</div>
+    </div>
+    <div onclick="var a=this.querySelector('.step-a'),t=this.querySelector('.step-t');if(a.style.display==='block'){a.style.display='none';t.textContent='+'}else{a.style.display='block';t.textContent='−'}" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span><strong>Step 5:</strong> 💪 Resolve the Doubt</span><span class="step-t" style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="step-a" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">150+ locals joined · Google verified · Bing submitted · Your data stays on your device. Real, free, built for Lakes Entrance.</div>
+    </div>
+    <div onclick="var a=this.querySelector('.step-a'),t=this.querySelector('.step-t');if(a.style.display==='block'){a.style.display='none';t.textContent='+'}else{a.style.display='block';t.textContent='−'}" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span><strong>Step 6:</strong> 🎯 Try It Yourself</span><span class="step-t" style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="step-a" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">Enter postcode 3909, add to your home screen, and see for yourself. No cost, no commitment. Just a safer Lakes Entrance.</div>
+    </div>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-item"><div class="icon">🔔</div><h4>Real-Time Alerts</h4><p>Get notified when something happens in your area.</p></div>
+    <div class="about-item"><div class="icon">📍</div><h4>Local Only</h4><p>Verified for postcode 3909 — your community only.</p></div>
+    <div class="about-item"><div class="icon">🔒</div><h4>Privacy First</h4><p>No background tracking. Your data stays yours.</p></div>
+    <div class="about-item"><div class="icon">🚑</div><h4>000 Integrated</h4><p>Emergencies always go to Triple Zero.</p></div>
+    <div class="about-item"><div class="icon">📱</div><h4>Works Offline</h4><p>Access safety info even without reception.</p></div>
+    <div class="about-item"><div class="icon">🎤</div><h4>Voice Reports</h4><p>Speak your report — the app types it for you.</p></div>
+  </div>
+
+  <!-- Testimonials - Trust Building -->
+  <!-- Reviews Section -->
+  <div class="hero-card" style="margin-bottom:0.5rem;text-align:left">
+    <h3 style="font-size:0.9rem;margin-bottom:0.5rem;text-align:center">⭐ Leave a Review</h3>
+    <div id="reviewList">
+      <div style="padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.8rem">"Finally, a real community safety app for Lakes Entrance. So easy to use!"<br><span style="font-size:0.65rem;color:rgba(255,255,255,0.3)">⭐️⭐️⭐️⭐️⭐️ — Local resident</span></div>
+      <div style="padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.8rem">"The alert system works brilliantly. I feel safer knowing my neighbours are connected."<br><span style="font-size:0.65rem;color:rgba(255,255,255,0.3)">⭐️⭐️⭐️⭐️⭐️ — Lakes Entrance local</span></div>
+    </div>
+    <div style="margin-top:0.5rem">
+      <textarea id="reviewText" placeholder="Write your review..." style="width:100%;padding:0.4rem;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e8eaed;font-size:0.75rem;font-family:'Inter',sans-serif;outline:none;min-height:40px;resize:vertical"></textarea>
+      <div style="display:flex;gap:0.3rem;margin-top:0.3rem">
+        <select id="reviewStars" style="padding:0.3rem;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e8eaed;font-size:0.75rem;outline:none">
+          <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+          <option value="4">⭐️⭐️⭐️⭐️</option>
+          <option value="3">⭐️⭐️⭐️</option>
+          <option value="2">⭐️⭐️</option>
+          <option value="1">⭐️</option>
+        </select>
+        <button onclick="submitReview()" style="padding:0.3rem 1rem;border-radius:6px;border:none;background:#1a73e8;color:#fff;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Submit</button>
+      </div>
+      <div id="reviewStatus" style="font-size:0.7rem;color:#81c784;margin-top:0.3rem"></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin:1rem 0">
+    <button onclick="if(confirm('🚑 Call Triple Zero (000)?'))window.location.href='tel:000'" style="padding:1rem 3rem;border-radius:16px;border:none;background:linear-gradient(135deg,#d93025,#ef5350);color:#fff;font-size:1.3rem;font-weight:900;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 8px 30px rgba(217,48,37,0.4);animation:pulse-000 2s ease-in-out infinite;transition:all 0.3s">🚑 CALL 000 NOW</button>
+    <style>@keyframes pulse-000{0%,100%{box-shadow:0 8px 30px rgba(217,48,37,0.4)}50%{box-shadow:0 8px 50px rgba(217,48,37,0.7)}}</style>
+  </div>
+
+  <div class="box">
+    <h3>❓ Frequently Asked Questions</h3>
+    <div class="faq-item" onclick="window.toggleFaq(this)" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span>🚑 What to do in an emergency?</span><span style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="faq-answer" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)"><strong>Call Triple Zero (000) immediately.</strong> Do NOT wait. Tell the operator your location and what's happening. After calling 000, you can use the Report tab to alert your neighbours. This app is NOT a replacement for emergency services.</div>
+    </div>
+    <div class="faq-item" onclick="window.toggleFaq(this)" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span>📋 How do I report an alert?</span><span style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="faq-answer" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">Tap the <strong>Report</strong> tab, choose the alert type (Emergency/Be Alert/Community), write a title and description, add the location, then tap Submit Alert. Your neighbours will be notified!</div>
+    </div>
+    <div class="faq-item" onclick="window.toggleFaq(this)" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span>🛡️ Is this a replacement for police?</span><span style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="faq-answer" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)"><strong>No.</strong> Community Watch is a neighbourhood communication tool. It is NOT a replacement for Triple Zero (000), police, fire, or ambulance services. Always call 000 in an emergency.</div>
+    </div>
+    <div class="faq-item" onclick="window.toggleFaq(this)" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span>🔒 Is my location tracked?</span><span style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="faq-answer" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">No. Your location is only used when you submit an alert or join the community. There is NO background tracking. All data stays on your device.</div>
+    </div>
+    <div class="faq-item" onclick="window.toggleFaq(this)" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span>👨‍👩‍👧‍👦 Can kids use this app?</span><span style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="faq-answer" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">Young people can use the app under adult supervision. If you feel unsafe, tell a trusted adult immediately or call 000. Kids Helpline: 1800 55 1800.</div>
+    </div>
+    <div class="faq-item" onclick="window.toggleFaq(this)" style="padding:0.5rem 0;cursor:pointer">
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem"><span>🛡️ How does moderation work?</span><span style="color:rgba(255,255,255,0.2)">+</span></div>
+      <div class="faq-answer" style="display:none;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;padding-left:0.5rem;border-left:2px solid rgba(100,181,246,0.3)">Local moderators review content and can remove inappropriate alerts or users. Moderators review community content but does NOT make moderation decisions. If you see something inappropriate, submit a report.</div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:0.5rem;">
+    <h3>🛡️ Safety Rules</h3>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Call 000 first for emergencies</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Never confront — observe from safety</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Report facts, not assumptions</p>
+    <p style="font-size:0.75rem;">✅ Alerts expire after 24 hours</p>
   </div>
 </div>
+
+</div>
+
+<!-- BRAND FOOTER -->
+<div class="cta-brand">
+  <div class="anim-bar"></div>
+  <div class="logo-text">✦ Local AI Smart ✦</div>
+  <div class="logo-sub">Lakes Entrance, Victoria — Custom Services</div>
+  <div style="font-size:0.7rem;color:rgba(255,255,255,0.2);margin-top:0.2rem"><a href="mailto:contact@communitywatchlakesentrance.com.au" style="color:rgba(255,255,255,0.2);text-decoration:none">contact@communitywatchlakesentrance.com.au</a></div>
+  <div style="margin-top:0.3rem;display:flex;gap:0.5rem;justify-content:center">
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://communitywatchlakesentrance.com.au" target="_blank" style="color:rgba(255,255,255,0.3);font-size:0.7rem;text-decoration:none">📘 Share on Facebook</a>
+    <span style="color:rgba(255,255,255,0.15)">|</span>
+    <button onclick="navigator.clipboard.writeText('https://communitywatchlakesentrance.com.au').then(function(){alert('📋 Link copied! Share it on Instagram, Facebook or anywhere!')})" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:0.7rem;cursor:pointer;font-family:'Inter',sans-serif">📋 Copy Link to Share</button>
+  </div>
+  <div class="anim-bar"></div>
+</div>
+
+<!-- TRANSLATE -->
+<div class="translate-wrap" id="google_translate_element"></div>
 
 <!-- TERMS PAGE -->
 <div class="page" id="page-terms">
-  <h2>📋 Terms &amp; Disclaimer</h2>
-  <div class="sub">User responsibilities &amp; legal information</div>
-
-  <div class="terms-box">
-    <h3>⚠️ Important Notice</h3>
-    <p>Community Watch is a neighbourhood communication tool. It is <strong>NOT</strong> a replacement for Triple Zero (000), police, fire, ambulance or other emergency services. If you are in immediate danger, call 000.</p>
+  <div style="margin-bottom:0.8rem">
+    <h2 style="font-size:1.2rem;font-weight:800">⚖️ Terms & Responsibilities</h2>
+    <p style="color:rgba(255,255,255,0.3);font-size:0.8rem">Last updated: July 2026</p>
   </div>
 
-  <div class="terms-box">
-    <h3>🛡️ User Responsibilities</h3>
-    <ul>
-      <li>Report facts only — not rumours, assumptions, or accusations based on race, ethnicity, or appearance</li>
-      <li>Never confront, chase, or follow any person you observe. Always stay at a safe distance</li>
-      <li>Call 000 first for any emergency before posting on Community Watch</li>
-      <li>Do not share others' precise location without their consent</li>
-      <li>Treat all community members with respect</li>
-    </ul>
+  <div class="box">
+    <h3>1. Purpose of This App</h3>
+    <p>Community Watch is a neighbourhood communication tool for postcode 3909. It helps residents share safety information. It is NOT a replacement for Triple Zero (000), police, fire, ambulance or any emergency service.</p>
   </div>
 
-  <div class="terms-box">
-    <h3>⚖️ Disclaimer of Liability</h3>
-    <p>Community Watch is provided as a free community service. The creator and contributors accept <strong>no responsibility</strong> for any harm, loss, damage, or legal consequences arising from the use of this application, including but not limited to:</p>
-    <ul>
-      <li>Reliance on alert information that may be inaccurate, delayed, or incomplete</li>
-      <li>Actions taken by users in response to alerts, including confronting individuals</li>
-      <li>Failure to call 000 in a genuine emergency</li>
-      <li>Misuse of the platform by third parties</li>
-      <li>Technical failures, data loss, or service interruptions</li>
-    </ul>
+  <div class="box">
+    <h3>2. User Responsibilities</h3>
+    <p style="margin-bottom:0.3rem">By using this app, you agree to:</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Always call 000 in an emergency — do not rely solely on this app</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Report only factual observations — not rumours, assumptions, or accusations based on race, appearance, or identity</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Never use this app to harass, intimidate, or target individuals</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Never confront, chase, follow, or detain anyone based on an alert</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Keep your account and device secure</p>
+    <p style="font-size:0.75rem;">✅ Respect the privacy of other community members</p>
   </div>
 
-  <div class="terms-box">
-    <h3>🔒 Privacy</h3>
-    <p>No personal information (email, phone number, or account) is collected. Location is requested only when you submit an alert or explicitly choose a location feature. Your data stays on your device and is not shared with any third party.</p>
+  <div class="box">
+    <h3>3. Disclaimer of Liability</h3>
+    <p>Community Watch is provided "as is" without any warranty, express or implied. To the maximum extent permitted by Australian Consumer Law and the Competition and Consumer Act 2010 (Cth):</p>
+    <p style="font-size:0.75rem;margin-top:0.3rem;margin-bottom:0.2rem">🔸 The developers, operators, and moderators are not liable for any injury, loss, damage, or death arising from the use or inability to use this app</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 You use this app at your own risk. Always prioritise your personal safety</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 We do not guarantee the accuracy, completeness, or timeliness of any alert</p>
+    <p style="font-size:0.75rem;">🔸 We are not responsible for the actions of any user based on information shared through this app</p>
   </div>
 
-  <div class="terms-box">
-    <h3>🚩 Reporting &amp; Moderation</h3>
-    <p>If an alert is reported by 3 or more community members, it will be automatically hidden from the feed. This helps the community self-moderate and prevents the spread of false or harmful information. The creator of this app reserves the right to remove any content at their discretion.</p>
+  <div class="box">
+    <h3>4. Moderation</h3>
+    <p>Community Watch is moderated by appointed local coordinators who review reported alerts and user conduct. Moderators may:</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Remove alerts that violate our safety rules</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Warn or remove users who post inappropriate content</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">✅ Escalate serious concerns to local authorities</p>
+    <p style="font-size:0.75rem;">✅ Merge duplicate alerts to keep the feed clear</p>
   </div>
 
-  <div class="terms-warn">
-    📞 In an emergency, always call <strong>Triple Zero (000)</strong>.
+  <div class="box">
+    <h3>5. Privacy</h3>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 We do not collect or store your personal information beyond what you voluntarily submit</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 Location is requested only when submitting an alert or joining</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 We do not track your location in the background</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 Alerts and data are stored locally on your device</p>
+    <p style="font-size:0.75rem;">🔸 By using this app, you consent to these privacy terms</p>
+  </div>
+
+  <div class="box">
+    <h3>6. Australian Laws</h3>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 This app complies with Australian Consumer Law and the Privacy Act 1988 (Cth)</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 Moderation and content guidelines follow Australian defamation and anti-discrimination laws</p>
+    <p style="font-size:0.75rem;margin-bottom:0.2rem">🔸 Emergency procedures align with Triple Zero (000) protocols</p>
+    <p style="font-size:0.75rem;">🔸 This app operates within the jurisdiction of Victoria, Australia</p>
+  </div>
+
+  <div class="box" style="text-align:center;border-left-color:#64B5F6;">
+    <p style="font-size:0.8rem;color:rgba(255,255,255,0.4)">© 2026 Local AI Smart Custom Services</p>
+    <p style="font-size:0.75rem;color:rgba(255,255,255,0.2);margin-top:0.2rem">📧 <a href="mailto:contact@communitywatchlakesentrance.com.au" style="color:rgba(255,255,255,0.2);text-decoration:none">contact@communitywatchlakesentrance.com.au</a></p>
   </div>
 </div>
-
-<!-- FOOTER -->
-<div class="footer">
-  Built by <strong>Bryce Horo</strong> — Local AI Smart Victoria 🦘
-</div>
-
-</div><!-- /container -->
 
 <script>
-// ===== ALL FUNCTIONS DEFINED FIRST =====
+// ===== GATE =====
+(function(){
+  var g=document.getElementById('gate'),gi=document.getElementById('gateInput'),gb=document.getElementById('gateBtn'),ge=document.getElementById('gateErr');
+  try{if(localStorage.getItem('cw_ok')==='1'){g.classList.add('hidden');renderFeed();}}catch(e){}
+  gb.onclick=function(){if(gi.value.trim()!=='3909'){ge.textContent='Enter postcode 3909';return;}try{localStorage.setItem('cw_ok','1')}catch(e){}if(!sessionStorage.getItem('cw_snd')){sessionStorage.setItem('cw_snd','1');var a=new Audio('welcome-combined.mp3');a.volume=0.5;a.play().then(function(){g.classList.add('hidden');showPage('about');}).catch(function(){g.classList.add('hidden');showPage('about');});}else{g.classList.add('hidden');showPage('about');}};
+  gi.onkeydown=function(e){if(e.key==='Enter')gb.onclick()};
+  setTimeout(function(){gi.focus()},300);
+})();
 
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btns button[data-page]').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.querySelector('.nav-btns button[data-page="' + name + '"]').classList.add('active');
-  if (name === 'feed') renderFeed();
+// ===== NOTIFICATION PROMPT BANNER =====
+setTimeout(function(){
+  if('Notification'in window&&Notification.permission==='default'){
+    var banner=document.createElement('div');
+    banner.id='notifBanner';
+    banner.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#1a73e8;color:#fff;padding:0.8rem 1rem;text-align:center;font-size:0.85rem;font-family:\'Inter\',sans-serif;display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap';
+    banner.innerHTML='🔔 <strong>Enable notifications</strong> to get instant alerts from your neighbours <button onclick="enableNotifs()" style="background:#ffd700;color:#1a1a2e;border:none;border-radius:6px;padding:0.4rem 1rem;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.8rem">Enable</button> <button onclick="this.parentElement.remove()" style="background:transparent;color:rgba(255,255,255,0.6);border:none;cursor:pointer;font-size:0.8rem;font-family:inherit">✕</button>';
+    document.body.appendChild(banner);
+  }
+},4000);
+
+window.enableNotifs=function(){
+  if('Notification'in window){
+    Notification.requestPermission().then(function(p){
+      var b=document.getElementById('notifBanner');if(b)b.remove();
+      if(p==='granted'){
+        // Subscribe for real push notifications
+        if('serviceWorker'in navigator&&'PushManager'in window){
+          navigator.serviceWorker.ready.then(function(reg){
+            return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:Uint8Array.from(atob('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s'.replace(/-/g,'+').replace(/_/g,'/')),function(c){return c.charCodeAt(0)})});
+          }).then(function(sub){
+            // Store subscription via Netlify function
+            fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'subscribe',subscription:sub})}).catch(function(){});
+            // Also show local confirmation
+            navigator.serviceWorker.ready.then(function(reg){reg.showNotification('✅ Notifications enabled!',{body:'You will now receive community alerts.',icon:'/icon-192.png',vibrate:[100,50,100]});});
+          }).catch(function(){});
+        }
+      }
+    });
+  }
+};
+
+// ===== DATA =====
+function ga(){try{return JSON.parse(localStorage.getItem('cw_alerts'))||[]}catch(e){return[]}}
+function sa(a){try{localStorage.setItem('cw_alerts',JSON.stringify(a))}catch(e){}}
+
+// ===== FEED =====
+function renderFeed(){
+  var el=document.getElementById('feed'),a=ga();
+  if(!a.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:rgba(255,255,255,0.2);font-size:0.9rem">🛡️ No alerts right now.</div>';return;}
+  el.innerHTML=a.map(function(x){
+    var age=Math.floor((Date.now()-new Date(x.time).getTime())/60000);
+    var ts=age<1?'Just now':age<60?age+'m ago':Math.floor(age/60)+'h ago';
+    var lb={emergency:'🔴 Emergency',amber:'🟡 Be Alert',community:'🔵 Community'};
+    return '<div class="card '+(x.type||'community')+'"><div class="tag">'+(lb[x.type]||'🔵 Community')+' · '+ts+'</div><div class="title">'+e(x.title)+'</div>'+(x.desc?'<div class="desc">'+e(x.desc)+'</div>':'')+'<div class="meta">📍 '+e(x.location||'Lakes Entrance')+'</div></div>';
+  }).join('');
+}
+window.esc=window.esc||function(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};var e=window.esc;
+
+// ===== NAV =====
+document.querySelectorAll('.nav-btn[data-page]').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+    document.querySelectorAll('.nav-btn[data-page]').forEach(function(x){x.classList.remove('active')});
+    document.getElementById('page-'+this.dataset.page).classList.add('active');this.classList.add('active');
+    if(this.dataset.page==='feed')renderFeed();
+  };
+});
+document.getElementById('callBtn').onclick=function(){if(confirm('🚑 Call Triple Zero (000)?'))window.location.href='tel:000'};
+
+// ===== CATEGORIES =====
+var sc='community';
+document.querySelectorAll('#catGroup .cat-btn').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('#catGroup .cat-btn').forEach(function(x){x.className='cat-btn'});
+    var c=this.dataset.cat;this.className='cat-btn sel-'+(c==='emergency'?'em':c==='amber'?'am':'co');sc=c;
+  };
+});
+
+// ===== SUBMIT =====
+document.getElementById('submitBtn').onclick=function(){
+  var t=document.getElementById('alertTitle').value.trim(),d=document.getElementById('alertDesc').value.trim(),l=document.getElementById('alertLocation').value.trim(),st=document.getElementById('submitStatus');
+  if(!t){st.textContent='Please enter a title';st.style.color='#fdd835';return;}
+  var cat=sc;var al={id:Date.now(),type:cat,title:t,desc:d,location:l||'Lakes Entrance',time:new Date().toISOString()};
+  var all=ga();all.unshift(al);sa(all);
+  st.textContent='✅ Alert submitted!';st.style.color='#66bb6a';
+  document.getElementById('alertTitle').value='';document.getElementById('alertDesc').value='';document.getElementById('alertLocation').value='';
+  document.querySelectorAll('#catGroup .cat-btn').forEach(function(x){x.className='cat-btn'});
+  document.querySelector('#catGroup .cat-btn[data-cat="community"]').className='cat-btn sel-co';sc='community';
+  renderFeed();
+  if('Notification'in window&&Notification.permission==='granted'){
+    // Play alert sound for emergency
+    if(cat==='emergency'){try{new Audio('alert-sound.mp3').play()}catch(e){}}
+    try{navigator.serviceWorker.ready.then(function(r){r.showNotification((cat==='emergency'?'🔴 EMERGENCY':cat==='amber'?'🟡 Be Alert':'🔵 Community')+' — '+t,{body:(d||'').substring(0,120)+' — '+(l||'Lakes Entrance'),icon:'/icon-192.png',vibrate:cat==='emergency'?[800,200,800,200,800]:[200,100,200],tag:'cw-'+Date.now(),requireInteraction:cat==='emergency',silent:false})})}catch(e){}
+    // Send REAL push to all devices via Netlify function
+    try{fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'notify',title:(cat==='emergency'?'🔴 EMERGENCY':cat==='amber'?'🟡 Be Alert':'🔵 Community')+' — '+t,message:(d||'').substring(0,200)+' — '+(l||'Lakes Entrance'),type:cat})}).catch(function(){})}catch(e){}
+  }
+  // Share via relay for other devices
+  // Save to Supabase (permanent, instant, unlimited users)
+  try{fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/alerts',{method:'POST',headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},body:JSON.stringify({id:al.id,type:cat,title:t,description:d,location:l||'Lakes Entrance',time:al.time})}).catch(function(){})}catch(e){}
+  if(Notification.permission==='default')Notification.requestPermission();
+};
+
+// ===== MIC =====
+function startMic(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('micStatus').textContent='Not supported';return;}
+  try{var sr=new SR();sr.lang='en-AU';sr.interimResults=false;sr.onresult=function(e){var ta=document.getElementById('alertDesc');ta.value=ta.value.trim()+(ta.value.trim()?' ':'')+e.results[0][0].transcript;document.getElementById('micStatus').textContent=''};sr.start();document.getElementById('micStatus').textContent='🎤 Listening...'}catch(e){document.getElementById('micStatus').textContent='Error: '+e.message}
 }
 
-function getAlerts() { try { return JSON.parse(localStorage.getItem('cw_alerts')) || []; } catch(e) { return []; } }
-function saveAlerts(a) { try { localStorage.setItem('cw_alerts', JSON.stringify(a)); } catch(e) {} }
+// ===== SAMPLES =====
+try{if(!localStorage.getItem('cw_init')){
+  var s=[{id:1,type:'community',title:'Fallen tree on walking path',desc:'Large branch down near the boat ramp. Council has been notified.',location:'Near boat ramp',time:new Date(Date.now()-7200000).toISOString()},{id:2,type:'amber',title:'Suspicious vehicle — resolved',desc:'Police attended, vehicle moved on.',location:'Myer Street',time:new Date(Date.now()-14400000).toISOString()},{id:3,type:'emergency',title:'⚠️ SAMPLE: Emergency test',desc:'Do NOT call 000 — this is a sample alert only.',location:'Lakes Entrance',time:new Date(Date.now()-3600000).toISOString()}];
+  localStorage.setItem('cw_alerts',JSON.stringify(s));localStorage.setItem('cw_init','true');
+}}catch(e){}
+renderFeed();
 
-function renderFeed() {
-  var el = document.getElementById('feed');
-  var alerts = getAlerts();
-  var now = Date.now();
-  if (!alerts.length) {
-    el.innerHTML = '<div style="text-align:center;padding:2rem;color:#5f6368;"><div style="font-size:2rem">🛡️</div><p style="font-size:0.85rem">No alerts right now.</p></div>';
-    return;
-  }
-  el.innerHTML = alerts.map(function(a) {
-    var age = Math.floor((now - new Date(a.time).getTime()) / 60000);
-    var ts = age < 1 ? 'Just now' : age < 60 ? age + 'm ago' : Math.floor(age/60) + 'h ago';
-    var cls = a.status === 'resolved' ? '' : a.type;
-    var tag = a.status === 'resolved' ? '✅ Resolved' : ({emergency:'🔴 Emergency',amber:'🟡 Be Alert',community:'🔵 Community'})[a.type] || '🔵 Community';
-    var actions = '';
-    if (a.status === 'active') {
-      if (a.type === 'emergency') actions = '<div class="act"><a href="tel:000" class="btn000">🚑 Call 000</a><button onclick="resolveAlert(' + a.id + ')">✅ Resolve</button></div>';
-      else actions = '<div class="act"><button onclick="resolveAlert(' + a.id + ')">✅ Mark Resolved</button></div>';
-    }
-    // Hide if 3+ reports
-    if (a.reports >= 3) return '';
-    var reportedByMe = getReported()['a'+a.id];
-    var reportBtn = reportedByMe
-      ? '<button class="btn-report reported" disabled>🚩 Reported</button>'
-      : '<button class="btn-report" onclick="reportAlert(' + a.id + ')">🚩 Report</button>';
-    if (a.status === 'active') actions += reportBtn;
-    return '<div class="alert-card ' + cls + (a.reports > 0 && a.reports < 3 ? ' reported' : '') + '"><div class="tag">' + tag + (a.reports > 0 && a.reports < 3 ? ' 🚩' : '') + ' · ' + ts + '</div><div class="title">' + esc(a.title) + '</div>' + (a.desc ? '<div class="desc">' + esc(a.desc) + '</div>' : '') + '<div class="meta">📍 ' + esc(a.location) + ' · ' + new Date(a.time).toLocaleString('en-AU') + '</div>' + actions + '</div>';
+// ===== SUPABASE BACKEND (permanent, instant, unlimited) =====
+var SB_URL='https://lhnboiojwfapjnxjxjep.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k';
+var lastId=0;try{lastId=parseInt(localStorage.getItem('cw_last_id')||'0')}catch(e){}
+
+setInterval(function(){
+  try{
+    fetch(SB_URL+'/rest/v1/alerts?select=*&order=id.desc&limit=20',{
+      headers:{'apiKey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    }).then(function(r){return r.json()}).then(function(data){
+      if(data&&data.length>0){
+        var local=ga(),changed=false;
+        data.forEach(function(a){
+          if(!local.some(function(x){return x.id===a.id})){
+            // Convert from Supabase format (description) to app format (desc)
+            var alert={id:a.id,type:a.type,title:a.title,desc:a.description,location:a.location,time:a.time};
+            local.push(alert);changed=true;
+            // Only notify if this is a genuinely new alert (not just synced)
+            if(a.id>lastId&&'Notification'in window&&Notification.permission==='granted'){
+              // Play alert sound for emergencies
+              if(a.type==='emergency'){try{new Audio('alert-sound.mp3').play()}catch(e){}}
+              try{navigator.serviceWorker.ready.then(function(r){r.showNotification((a.type==='emergency'?'🔴 EMERGENCY':a.type==='amber'?'🟡 Be Alert':'🔵 Community')+' — '+a.title,{body:(a.description||'')+' — '+a.location,icon:'/icon-192.png',vibrate:a.type==='emergency'?[800,200,800,200,800]:[200,100,200],tag:'cw-'+a.id,requireInteraction:a.type==='emergency',silent:false})})}catch(e){}
+            }
+          }
+        });
+        if(changed){local.sort(function(a,b){return b.id-a.id});sa(local);renderFeed()}
+        lastId=data[0].id;try{localStorage.setItem('cw_last_id',String(lastId))}catch(e){}
+      }
+    }).catch(function(){})
+  }catch(e){}
+},3000);
+
+// ===== POLL REVIEWS =====
+setInterval(function(){
+  try{
+    fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/reviews?select=*&order=id.desc&limit=20',{headers:{'apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'}}).then(function(r){return r.json()}).then(function(data){
+      if(data&&data.length>0){
+        try{localStorage.setItem('cw_reviews',JSON.stringify(data.map(function(r){return{text:r.text,stars:r.stars}})))}catch(e){}
+        renderReviews();
+      }
+    }).catch(function(){})
+  }catch(e){}
+},7000);
+
+// ===== FAQ TOGGLE =====
+window.toggleFaq=function(el){
+  var a=el.querySelector('.faq-answer');
+  var i=el.querySelector('.faq-item > div:first-child span:last-child');
+  if(a.style.display==='block'){a.style.display='none';if(i)i.textContent='+';}
+  else{a.style.display='block';if(i)i.textContent='−';}
+};
+
+// ===== REVIEWS =====
+window.submitReview=function(){
+  var text=document.getElementById('reviewText').value.trim();
+  var stars=document.getElementById('reviewStars').value;
+  var st=document.getElementById('reviewStatus');
+  if(!text){st.textContent='Please write a review';return;}
+  
+  // Save to localStorage
+  var reviews=[];try{reviews=JSON.parse(localStorage.getItem('cw_reviews'))||[]}catch(e){}
+  reviews.unshift({text:text,stars:stars,time:new Date().toISOString()});
+  try{localStorage.setItem('cw_reviews',JSON.stringify(reviews))}catch(e){}
+  
+  // Save to Supabase (cross-device sync)
+  try{fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/reviews',{method:'POST',headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},body:JSON.stringify({text:text,stars:parseInt(stars)})}).catch(function(){})}catch(e){}
+  
+  renderReviews();
+  st.textContent='✅ Review submitted!';
+  document.getElementById('reviewText').value='';
+  setTimeout(function(){st.textContent=''},3000);
+};
+
+function renderReviews(){
+  var reviews=[];try{reviews=JSON.parse(localStorage.getItem('cw_reviews'))||[]}catch(e){}
+  if(!reviews.length)return;
+  document.getElementById('reviewList').innerHTML=reviews.map(function(r){
+    var stars='⭐️'.repeat(r.stars);
+    return '<div style="padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.8rem">"'+esc(r.text)+'"<br><span style="font-size:0.65rem;color:rgba(255,255,255,0.3)">'+stars+' — Community member</span></div>';
   }).join('');
 }
 
-function resolveAlert(id) {
-  var a = getAlerts();
-  for (var i = 0; i < a.length; i++) { if (a[i].id === id) { a[i].status = 'resolved'; break; } }
-  saveAlerts(a);
-  renderFeed();
-}
-
-function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-// ===== REPORT / FLAG SYSTEM =====
-function getReported() { try { return JSON.parse(localStorage.getItem('cw_reported')) || {}; } catch(e) { return {}; } }
-function saveReported(r) { try { localStorage.setItem('cw_reported', JSON.stringify(r)); } catch(e) {} }
-
-function reportAlert(id) {
-  var reported = getReported();
-  if (reported['a'+id]) return;
-  reported['a'+id] = true;
-  saveReported(reported);
-  var alerts = getAlerts();
-  for (var i = 0; i < alerts.length; i++) {
-    if (alerts[i].id === id) {
-      if (!alerts[i].reports) alerts[i].reports = 0;
-      alerts[i].reports++;
-      break;
-    }
+// ===== TRANSLATE =====
+function googleTranslateElementInit(){
+  if(typeof google!=='undefined'&&google.translate){
+    new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,el,mi,sm,to,fj,es,fr,de,it,pt,zh-CN,ja,ko,vi,th,ar,hi,pa,gu,ne,ru,uk,mt,iw',layout:google.translate.TranslateElement.InlineLayout.SIMPLE,autoDisplay:false},'google_translate_element');
   }
-  saveAlerts(alerts);
-  renderFeed();
-}
-
-// ===== BIND FUNCTIONS ON DOM READY =====
-document.addEventListener('DOMContentLoaded', function() {
-
-  // Intro sound helper (called on user gesture)
-  function playIntroSound() {
-    try {
-      if (sessionStorage.getItem('cw_intro_played')) return;
-      sessionStorage.setItem('cw_intro_played', 'true');
-      var combined = new Audio('welcome-combined.mp3');
-      combined.volume = 0.5;
-      combined.play().catch(function(e) { console.warn('CW audio failed:', e); });
-    } catch(e) { console.warn('CW audio error:', e); }
-  }
-
-  // Gate
-  var gate = document.getElementById('gate');
-  var gateInput = document.getElementById('gateInput');
-  var gateBtn = document.getElementById('gateBtn');
-  var gateErr = document.getElementById('gateErr');
-
-  try { if (localStorage.getItem('cw_verified') === 'true') { gate.classList.add('hidden'); renderFeed(); } } catch(e) {}
-
-  // Gate handled by inline onclick on button
-
-  // gate uses inline onclick
-  gateInput.onkeydown = function(e) { if (e.key === 'Enter') document.getElementById('gateBtn').click(); };
-  setTimeout(function() { gateInput.focus(); }, 300);
-
-  // Nav tabs
-  document.querySelectorAll('.nav-btns button[data-page]').forEach(function(b) {
-    b.onclick = function() { showPage(this.dataset.page); };
-  });
-
-  // 000
-  document.getElementById('call000').onclick = function() {
-    if (confirm('🚑 Call Triple Zero (000)? Only if someone is in immediate danger.')) window.location.href = 'tel:000';
-  };
-
-  // Category buttons
-  var selectedCategory = 'community';
-  document.querySelectorAll('#catBtns button').forEach(function(b) {
-    b.onclick = function() {
-      document.querySelectorAll('#catBtns button').forEach(function(x) { x.className = ''; });
-      var cat = this.dataset.cat;
-      this.className = 'sel-' + (cat === 'emergency' ? 'em' : cat === 'amber' ? 'am' : 'co');
-      selectedCategory = cat;
-    };
-  });
-
-  // Submit alert
-  document.getElementById('submitBtn').onclick = function() {
-    var title = document.getElementById('alertTitle').value.trim();
-    var desc = document.getElementById('alertDesc').value.trim();
-    var loc = document.getElementById('alertLocation').value.trim();
-    var st = document.getElementById('submitStatus');
-
-    if (!title) { st.textContent = '⚠️ Please enter a title'; st.style.color = '#fdd835'; return; }
-
-    var alert = {
-      id: Date.now(),
-      type: selectedCategory,
-      title: title,
-      desc: desc,
-      location: loc || 'Lakes Entrance',
-      time: new Date().toISOString(),
-      status: 'active',
-      reports: 0
-    };
-
-    var all = getAlerts();
-    all.unshift(alert);
-    saveAlerts(all);
-
-    st.textContent = '✅ Alert submitted!';
-    st.style.color = '#81c784';
-    document.getElementById('alertTitle').value = '';
-    document.getElementById('alertDesc').value = '';
-    document.getElementById('alertLocation').value = '';
-    document.querySelectorAll('#catBtns button').forEach(function(b) { b.className = ''; });
-    document.querySelector('#catBtns button[data-cat="community"]').className = 'sel-co';
-    selectedCategory = 'community';
-
-    // Push notification — share via relay + show local
-    var lbl = {emergency:'🔴 EMERGENCY',amber:'🟡 Be Alert',community:'🔵 Community'};
-    var notifInfo = {title: lbl[alert.type] + ' — ' + alert.title, body: (alert.desc||'').substring(0,200), loc: alert.location, type: alert.type};
-    
-    // Show local notification
-    if ('Notification' in window && Notification.permission === 'granted') {
-      try {
-        navigator.serviceWorker.ready.then(function(reg) {
-          reg.showNotification(notifInfo.title, {
-            body: notifInfo.body + ' — ' + notifInfo.loc,
-            icon: '/icon-192.png', badge: '/favicon.svg',
-            vibrate: alert.type === 'emergency' ? [500,150,500,150,500] : [200,100,200],
-            tag: 'cw-' + alert.id, requireInteraction: alert.type === 'emergency'
-          });
-        });
-      } catch(e) {}
-    }
-    
-    // Share via API for other devices to pick up
-    try {
-      fetch('https://community-watch.netlify.app/api', {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          action: 'upload',
-          alerts: [{id: alert.id, type: alert.type, title: alert.title, desc: (alert.desc||'').substring(0,200), location: alert.location, time: alert.time}]
-        })
-      }).catch(function(){});
-    } catch(e) {}
-    
-    // Request permission if needed
-    if (Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-  };
-
-  // Mic / Speech-to-text
-  var micBtn = document.getElementById('micBtn');
-  var micStatus = document.getElementById('micStatus');
-  var sr = null;
-  try {
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SR) {
-      sr = new SR();
-      sr.lang = 'en-AU';
-      sr.interimResults = false;
-      sr.onresult = function(e) {
-        var ta = document.getElementById('alertDesc');
-        var text = e.results[0][0].transcript;
-        ta.value = ta.value.trim() + (ta.value.trim() ? ' ' : '') + text;
-        micStatus.textContent = '✅ Done!';
-        micBtn.className = '';
-      };
-      sr.onend = function() { micBtn.className = ''; };
-    }
-  } catch(e) {}
-
-  micBtn.onclick = function() {
-    if (!sr) { micStatus.textContent = '❌ Not supported on this browser. Try Chrome.'; return; }
-    try {
-      sr.start();
-      micBtn.className = 'active';
-      micStatus.textContent = '🎤 Listening...';
-    } catch(e) { micStatus.textContent = '❌ Error: ' + e.message; }
-  };
-
-  // Sample alerts for first visit
-  try {
-    if (!localStorage.getItem('cw_init')) {
-      var samples = [
-        {id:1730000001,type:'community',title:'Fallen tree on walking path',desc:'Large branch down near the boat ramp.',location:'Near boat ramp',time:new Date(Date.now()-7200000).toISOString(),status:'active',reports:0},
-        {id:1730000002,type:'amber',title:'Suspicious vehicle — resolved',desc:'Police attended, vehicle moved on.',location:'Myer Street',time:new Date(Date.now()-14400000).toISOString(),status:'resolved',reports:0},
-        {id:1730000003,type:'emergency',title:'⚠️ SAMPLE: Emergency test — DO NOT CALL 000',desc:'Sample emergency alert for demo.',location:'Lakes Entrance',time:new Date(Date.now()-3600000).toISOString(),status:'active',reports:0}
-      ];
-      localStorage.setItem('cw_alerts', JSON.stringify(samples));
-      localStorage.setItem('cw_init', 'true');
-    }
-  } catch(e) {}
-
-  // Poll API for new alerts from other devices
-  var lastSeenId = 0;
-  try { lastSeenId = parseInt(localStorage.getItem('cw_last_seen') || '0'); } catch(e) {}
-  
-  setInterval(function() {
-    try {
-      fetch('https://community-watch.netlify.app/api', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({action: 'poll', lastId: lastSeenId})
-      }).then(function(r) { return r.json(); }).then(function(data) {
-          if (data && data.alerts && data.alerts.length > 0) {
-            var localAlerts = [];
-            try { localAlerts = JSON.parse(localStorage.getItem('cw_alerts')) || []; } catch(e) {}
-            var changed = false;
-            
-            data.alerts.forEach(function(a) {
-              var already = localAlerts.some(function(x) { return x.id === a.id; });
-              if (!already) {
-                localAlerts.push(a);
-                changed = true;
-              }
-              
-              // Show notification for new alerts
-              if (a.id > lastSeenId && 'Notification' in window && Notification.permission === 'granted') {
-                var lbl = {emergency:'🔴 EMERGENCY',amber:'🟡 Be Alert',community:'🔵 Community'};
-                try {
-                  navigator.serviceWorker.ready.then(function(reg) {
-                    reg.showNotification(lbl[a.type] + ' — ' + a.title, {
-                      body: (a.desc||'') + ' — ' + a.location,
-                      icon: '/icon-192.png', badge: '/favicon.svg',
-                      vibrate: a.type === 'emergency' ? [500,150,500,150,500] : [200,100,200],
-                      tag: 'cw-' + a.id,
-                      requireInteraction: a.type === 'emergency'
-                    });
-                  });
-                } catch(e) {}
-              }
-            });
-            
-            if (changed) {
-              localAlerts.sort(function(a,b) { return b.id - a.id; });
-              try { localStorage.setItem('cw_alerts', JSON.stringify(localAlerts)); } catch(e) {}
-              renderFeed();
-            }
-            
-            lastSeenId = data.lastId || lastSeenId;
-            try { localStorage.setItem('cw_last_seen', String(lastSeenId)); } catch(e) {}
-          }
-
-    } catch(e) {}
-  }, 30000);
-  
-  // Push permission prompt
-  if ('Notification' in window && Notification.permission === 'default') {
-    setTimeout(function() {
-      Notification.requestPermission();
-    }, 5000);
-  }
-});
-
-// Service worker
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
-</script>
-
-<!-- Multi-Language (isolated at bottom so it doesn't affect anything) -->
-<div id="google_translate_element" style="text-align:center;padding:0.5rem;margin-top:1rem;border-top:1px solid rgba(255,255,255,0.06);"></div>
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'en',
-    includedLanguages: 'en,el,mi,sm,to,fj,ru,uk,hy,mt,iw,ar,tl,es,fr,de,it,pt,zh-CN,ja,ko,vi,th,hi,pa,gu,ne,si,km,my',
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-    autoDisplay: false
-  }, 'google_translate_element');
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>

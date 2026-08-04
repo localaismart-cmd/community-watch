@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Watch — One-Page Flyer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:#0a1628;color:#e8eaed;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+.flyer{max-width:400px;width:100%;background:linear-gradient(135deg,#0a1628,#162240);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem 1.5rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.shield{font-size:3rem;margin-bottom:0.3rem}
+h1{font-size:1.5rem;font-weight:900;margin-bottom:0.2rem;background:linear-gradient(135deg,#64B5F6,#81c784);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tagline{font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:1rem}
+.url-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.8rem;margin-bottom:1rem}
+.url-box .label{font-size:0.65rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px}
+.url-box .url{font-size:1.1rem;font-weight:800;color:#64B5F6;word-break:break-all}
+.postcode{font-size:2.5rem;font-weight:900;color:#ffd700;margin-bottom:0.5rem}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem}
+.feature{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0.6rem}
+.feature .icon{font-size:1.3rem}
+.feature .text{font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:0.2rem}
+.steps{text-align:left;font-size:0.8rem;color:rgba(255,255,255,0.6);margin:0.8rem 0;padding-left:1rem}
+.steps li{margin-bottom:0.3rem}
+.footer{font-size:0.6rem;color:rgba(255,255,255,0.15);margin-top:0.8rem}
+@media print{body{background:#fff;padding:0}.flyer{border:none;box-shadow:none;background:#f8f9fa;color:#1a1a1a}h1{-webkit-text-fill-color:#1a237e}.url-box .url{color:#1a237e}.postcode{color:#e65100}}
+</style>
+</head>
+<body>
+<div class="flyer">
+  <div class="shield">🛡️</div>
+  <h1>Community Watch</h1>
+  <p class="tagline">Lakes Entrance — Keeping 3909 Safe</p>
+  
+  <div class="url-box">
+    <div class="label">Visit on your phone</div>
+    <div class="url">communitywatchlakesentrance.com.au</div>
+  </div>
+  
+  <div class="postcode">🔑 3909</div>
+  
+  <div class="features">
+    <div class="feature"><div class="icon">🔔</div><div class="text">Real-time alerts</div></div>
+    <div class="feature"><div class="icon">🚑</div><div class="text">One-tap 000</div></div>
+    <div class="feature"><div class="icon">🔒</div><div class="text">Privacy-first</div></div>
+    <div class="feature"><div class="icon">🎤</div><div class="text">Voice reports</div></div>
+    <div class="feature"><div class="icon">🌐</div><div class="text">25 languages</div></div>
+    <div class="feature"><div class="icon">📱</div><div class="text">Works offline</div></div>
+  </div>
+  
+  <div style="font-size:0.85rem;font-weight:700;color:#81c784;margin-bottom:0.5rem">✅ FREE — No sign-ups, no costs</div>
+  
+  <ol class="steps">
+    <li>Go to the website on your phone</li>
+    <li>Enter postcode <strong>3909</strong></li>
+    <li>Tap <strong>Add to Home Screen</strong> — now it's an app!</li>
+  </ol>
+  
+  <div style="font-size:0.75rem;color:rgba(255,255,255,0.4)">⚠️ This app does NOT replace Triple Zero (000)</div>
+  
+  <div class="footer">Built by Local AI Smart · Lakes Entrance · Free for our community</div>
+</div>
+</body>
+</html>
