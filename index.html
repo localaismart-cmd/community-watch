@@ -480,7 +480,7 @@ window.enableNotifs=function(){
               return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array('BDWGJz7YNTioDf8c2PJh1WlV7yzfGBXxq4-eR3JtlNn_IQOcF2nJJObdc7bb1Tb-7e8hLKgeNB1lhlMgLil-r9s')});
             });
           }).then(function(sub){
-            try{alert('STEP 6 keys: '+(sub&&sub.keys?('p256dh='+String(sub.keys.p256dh).substring(0,30)+' auth='+String(sub.keys.auth).substring(0,30)):'KEYS ARE MISSING'))}catch(e){}
+            try{alert('SUB FULL: '+(sub?JSON.stringify(sub):'NO SUB'))}catch(e){}
             var p256=(sub.keys&&sub.keys.p256dh)||'';
             var auth=(sub.keys&&sub.keys.auth)||'';
             return fetch('https://lhnboiojwfapjnxjxjep.supabase.co/rest/v1/subscriptions',{
