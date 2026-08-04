@@ -45,7 +45,25 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,sans-serif;background:#0a1628;color:#e8eaed;overflow-x:hidden}
+body{font-family:'Inter',-apple-system,sans-serif;background:#0a1628;color:#e8eaed;overflow-x:hidden;transition:background 0.3s,color 0.3s}
+/* Light theme */
+body.light{background:#f5f7fa;color:#1a1a2e}
+body.light .nav{background:rgba(255,255,255,0.95);border-bottom:1px solid #e0e0e0}
+body.light .nav-btn{color:#666}
+body.light .nav-btn.active{color:#1a73e8;background:rgba(26,115,232,0.08)}
+body.light .box{background:#fff;border-color:#e8e8e8}
+body.light .card{background:#fff;border-color:#e8e8e8}
+body.light .hero-card{background:#fff;border-color:#e8e8e8}
+body.light .tagline{color:#888}
+body.light h2{color:#1a1a2e}
+body.light .about-item{background:#fff;border-color:#e8e8e8}
+body.light .faq-item{background:#fff;border-color:#e8e8e8}
+body.light input,body.light textarea{background:#fff;border-color:#ddd;color:#1a1a2e}
+body.light .cta-brand .logo-text{-webkit-text-fill-color:initial;color:#1a237e}
+body.light .translate-wrap{border-color:#e8e8e8}
+body.light .nav-brand{-webkit-text-fill-color:initial;color:#1a237e}
+body.light .alert-card{background:#fff;border-color:#e8e8e8}
+body.light .alert-card .desc,body.light .alert-card .meta{color:#666}
 /*=== GATE ===*/
 .gate{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0a1628 0%,#162240 50%,#0a1628 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;transition:opacity 0.5s}
 .gate.hidden{opacity:0;pointer-events:none}
@@ -160,6 +178,7 @@ textarea{min-height:65px;resize:vertical}
   <button class="nav-btn" data-page="feed">📋 Feed</button>
   <button class="nav-btn danger" id="callBtn">🚑 000</button>
   <button class="nav-btn" data-page="terms">⚖️ Terms</button>
+  <button class="nav-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
 </div>
 
 <div class="container">
@@ -169,6 +188,12 @@ textarea{min-height:65px;resize:vertical}
   <div style="margin-bottom:0.8rem">
     <h2 style="font-size:1.2rem;font-weight:800">📋 Neighbourhood Feed</h2>
     <p style="color:rgba(255,255,255,0.3);font-size:0.8rem">Lakes Entrance · Postcode 3909</p>
+  </div>
+  <div style="display:flex;gap:0.3rem;margin-bottom:0.6rem;flex-wrap:wrap">
+    <button onclick="setFilter('all')" id="filt-all" style="padding:0.3rem 0.8rem;border-radius:6px;border:1px solid #1a73e8;background:#1a73e8;color:#fff;font-size:0.7rem;font-weight:600;cursor:pointer;font-family:inherit">All</button>
+    <button onclick="setFilter('emergency')" id="filt-emergency" style="padding:0.3rem 0.8rem;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.5);font-size:0.7rem;font-weight:600;cursor:pointer;font-family:inherit">🔴 Emergency</button>
+    <button onclick="setFilter('amber')" id="filt-amber" style="padding:0.3rem 0.8rem;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.5);font-size:0.7rem;font-weight:600;cursor:pointer;font-family:inherit">🟡 Be Alert</button>
+    <button onclick="setFilter('community')" id="filt-community" style="padding:0.3rem 0.8rem;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.5);font-size:0.7rem;font-weight:600;cursor:pointer;font-family:inherit">🔵 Community</button>
   </div>
   <div id="feed"></div>
 </div>
@@ -199,6 +224,9 @@ textarea{min-height:65px;resize:vertical}
 
     <label>Location</label>
     <input type="text" id="alertLocation" placeholder="e.g. Corner of Esplanade" style="margin-bottom:0.8rem">
+
+    <label>Photo (optional)</label>
+    <input type="file" id="alertPhoto" accept="image/*" style="margin-bottom:0.8rem">
   </div>
 
   <button class="btn-primary" id="submitBtn">📤 Submit Alert</button>
@@ -407,6 +435,19 @@ textarea{min-height:65px;resize:vertical}
 </div>
 
 <script>
+// ===== THEME TOGGLE =====
+window.toggleTheme=function(){
+  var b=document.body;
+  b.classList.toggle('light');
+  var btn=document.getElementById('themeBtn');
+  if(btn)btn.textContent=b.classList.contains('light')?'☀️':'🌙';
+  try{localStorage.setItem('cw_theme',b.classList.contains('light')?'light':'dark')}catch(e){}
+};
+(function(){
+  var saved='';try{saved=localStorage.getItem('cw_theme')||''}catch(e){}
+  if(saved==='light'){document.body.classList.add('light');var btn=document.getElementById('themeBtn');if(btn)btn.textContent='☀️';}
+})();
+
 // ===== SERVICE WORKER REGISTRATION =====
 if('serviceWorker'in navigator){
   window.addEventListener('load',function(){
@@ -491,22 +532,39 @@ function ga(){try{return JSON.parse(localStorage.getItem('cw_alerts'))||[]}catch
 function sa(a){try{localStorage.setItem('cw_alerts',JSON.stringify(a))}catch(e){}}
 
 // ===== FEED =====
+var currentFilter='all';
+function setFilter(f){
+  currentFilter=f;
+  document.querySelectorAll('[id^="filt-"]').forEach(function(b){b.style.background='transparent';b.style.color='rgba(255,255,255,0.5)';b.style.border='1px solid rgba(255,255,255,0.15)';});
+  var btn=document.getElementById('filt-'+f);
+  if(btn){btn.style.background='#1a73e8';btn.style.color='#fff';btn.style.border='1px solid #1a73e8';}
+  renderFeed();
+}
 function renderFeed(){
   var el=document.getElementById('feed'),a=ga();
   var now=Date.now();
   var EXPIRY=24*60*60*1000; // 24 hours in milliseconds
-  // Remove expired alerts (older than 24 hours)
   var fresh=a.filter(function(x){
     try{return now-new Date(x.time).getTime()<EXPIRY;}catch(e){return true;}
   });
-  if(fresh.length!==a.length)sa(fresh); // clean up expired from storage
+  if(fresh.length!==a.length)sa(fresh); // clean up expired
+  if(currentFilter!=='all')fresh=fresh.filter(function(x){return x.type===currentFilter;});
   if(!fresh.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:rgba(255,255,255,0.2);font-size:0.9rem">🛡️ No alerts right now.</div>';return;}
   el.innerHTML=fresh.map(function(x){
     var age=Math.floor((now-new Date(x.time).getTime())/60000);
     var ts=age<1?'Just now':age<60?age+'m ago':Math.floor(age/60)+'h ago';
     var lb={emergency:'🔴 Emergency',amber:'🟡 Be Alert',community:'🔵 Community'};
-    return '<div class="card '+(x.type||'community')+'"><div class="tag">'+(lb[x.type]||'🔵 Community')+' · '+ts+'</div><div class="title">'+e(x.title)+'</div>'+(x.desc?'<div class="desc">'+e(x.desc)+'</div>':'')+'<div class="meta">📍 '+e(x.location||'Lakes Entrance')+'</div></div>';
+    var status=x.resolved?'✅ All Clear':(lb[x.type]||'🔵 Community')+' · '+ts;
+    var cardClass=x.resolved?'card resolved':'card '+(x.type||'community');
+    var photo=x.photo?'<img src="'+x.photo+'" style="width:100%;border-radius:8px;margin-top:0.4rem;max-height:180px;object-fit:cover">':'';
+    var actions=x.resolved?'':'<div style="margin-top:0.4rem"><button onclick="markClear('+x.id+')" style="padding:0.3rem 0.8rem;border-radius:6px;border:1px solid #66bb6a;background:transparent;color:#66bb6a;font-size:0.7rem;font-weight:600;cursor:pointer;font-family:inherit">✅ All Clear</button></div>';
+    return '<div class="'+cardClass+'"><div class="tag">'+status+'</div><div class="title">'+e(x.title)+'</div>'+(x.desc?'<div class="desc">'+e(x.desc)+'</div>':'')+photo+'<div class="meta">📍 '+e(x.location||'Lakes Entrance')+'</div>'+actions+'</div>';
   }).join('');
+}
+function markClear(id){
+  var a=ga();
+  for(var i=0;i<a.length;i++){if(a[i].id===id){a[i].resolved=true;break;}}
+  sa(a);renderFeed();
 }
 window.esc=window.esc||function(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};var e=window.esc;
 
@@ -535,6 +593,18 @@ document.getElementById('submitBtn').onclick=function(){
   var t=document.getElementById('alertTitle').value.trim(),d=document.getElementById('alertDesc').value.trim(),l=document.getElementById('alertLocation').value.trim(),st=document.getElementById('submitStatus');
   if(!t){st.textContent='Please enter a title';st.style.color='#fdd835';return;}
   var cat=sc;var al={id:Date.now(),type:cat,title:t,desc:d,location:l||'Lakes Entrance',time:new Date().toISOString()};
+  // Handle photo
+  var fileInput=document.getElementById('alertPhoto');
+  if(fileInput&&fileInput.files&&fileInput.files[0]){
+    var reader=new FileReader();
+    reader.onload=function(ev){al.photo=ev.target.result;finishSubmit(al);};
+    reader.readAsDataURL(fileInput.files[0]);
+  }else{
+    finishSubmit(al);
+  }
+};
+function finishSubmit(al){
+  var t=al.title,d=al.desc,l=al.location,cat=al.type,st=document.getElementById('submitStatus');
   var all=ga();all.unshift(al);sa(all);
   st.textContent='✅ Alert submitted!';st.style.color='#66bb6a';
   document.getElementById('alertTitle').value='';document.getElementById('alertDesc').value='';document.getElementById('alertLocation').value='';
