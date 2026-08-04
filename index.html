@@ -474,8 +474,9 @@ window.enableNotifs=function(){
               headers:{'Content-Type':'application/json','apiKey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxobmJvaW9qd2ZhcGpueGp4amVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1ODU0MzksImV4cCI6MjEwMDE2MTQzOX0.yft1qubqbKGbkzb2qjYjk3UPQjEWV_1YIRD9MbO_-2k'},
               body:JSON.stringify({endpoint:sub.endpoint,p256dh:p256,auth:auth})
             });
-          }).then(function(){
-            try{alert('STEP 7: Saved to database! All done!')}catch(e){}
+          }).then(function(res){
+            var st=(res&&res.status)?('HTTP '+res.status+' '+res.statusText):'OK (resolved)';
+            try{alert('STEP 7: Save result = '+st)}catch(e){}
             navigator.serviceWorker.ready.then(function(reg){reg.showNotification('✅ Notifications enabled!',{body:'You will now receive community alerts.',icon:'/icon-192.png',vibrate:[100,50,100]});});
           }).catch(function(err){
             console.log('Subscribe error:',err);
